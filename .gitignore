@@ -40,3 +40,18 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# --- Additional common Java ignores ---
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# JVM crash logs
+hs_err_pid*
+
+# Build artifacts (optional)
+*.jar
+*.war
+*.zip
