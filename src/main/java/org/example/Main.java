@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -22,7 +23,7 @@ public class Main {
                     System.out.println("Type the list you want to add it to, followed by: <id>, <title>, <description>, <priority>");
 
                     System.out.println("Select list: todo, doing, done");
-                    ArrayList<Task> addList = board.getList(scanner.nextLine().toLowerCase());
+                    List<Task> addList = board.getList(scanner.nextLine().toLowerCase());
 
                     if (addList == null) {
                         break;
@@ -34,8 +35,22 @@ public class Main {
                     System.out.println("Enter description:");
                     String description = scanner.nextLine();
 
-                    System.out.println("Enter priority (0,1,2):");
-                    int priority = Integer.parseInt(scanner.nextLine());
+                    int priority; // will be set by the loop
+                    while (true) {
+                        System.out.println("Enter priority of task as a value between 1–3:");
+                        String line = scanner.nextLine().trim();
+                        try {
+                            int parsed = Integer.parseInt(line);
+                            if (parsed < 1 || parsed > 3) {
+                                System.out.println("Invalid priority: must be 1, 2, or 3.");
+                                continue;
+                            }
+                            priority = parsed; // valid
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input: enter a number (1–3).");
+                        }
+                    }
 
                     Task newTask = new Task(taskId++, title, description, priority);
 
@@ -46,7 +61,7 @@ public class Main {
 
                 case "list":
                     System.out.println("Select list: todo, doing, done");
-                    ArrayList<Task> listSelection = board.getList(scanner.nextLine().toLowerCase());
+                    List<Task> listSelection = board.getList(scanner.nextLine().toLowerCase());
 
                     if (listSelection == null) {
                         break;
@@ -56,14 +71,14 @@ public class Main {
                     break;
                 case "move":
                     System.out.println("Move from which list: todo, doing, done");
-                    ArrayList<Task> fromList = board.getList(scanner.nextLine().toLowerCase());
+                    List<Task> fromList = board.getList(scanner.nextLine().toLowerCase());
 
                     if (fromList == null) {
                         break;
                     }
 
                     System.out.println("Move to which list: todo, doing, done");
-                    ArrayList<Task> toList = board.getList(scanner.nextLine().toLowerCase());
+                    List<Task> toList = board.getList(scanner.nextLine().toLowerCase());
 
                     if (toList == null) {
                         break;
@@ -72,11 +87,17 @@ public class Main {
                     System.out.println("Id of task to move");
                     int moveTaskId = Integer.parseInt(scanner.nextLine());
 
-                    board.moveTaskById(fromList, toList, moveTaskId);
+                    boolean taskMoved = board.moveTaskById(fromList, toList, moveTaskId);
+
+                    if (taskMoved) {
+                        System.out.println("Task moved successfully");
+                    } else {
+                        System.out.println("Task not found");
+                    }
                     break;
                 case "del":
                     System.out.println("Pick a list to delete a task from: todo, doing, done");
-                    ArrayList<Task> delList = board.getList(scanner.nextLine().toLowerCase());
+                    List<Task> delList = board.getList(scanner.nextLine().toLowerCase());
 
                     if (delList == null) {
                         break;
@@ -85,7 +106,13 @@ public class Main {
                     System.out.println("Enter id of task to delete: ");
                     int delId = Integer.parseInt(scanner.nextLine());
 
-                    board.removeTaskById(delList, delId);
+                    boolean result = board.removeTaskById(delList, delId);
+
+                    if (result) {
+                        System.out.println("Task removed successfully");
+                    } else {
+                        System.out.println("Task not found");
+                    }
                     break;
                 case "help":
                     System.out.println("Commands:");

@@ -23,19 +23,19 @@ public class Board {
         list.add(task);
     }
 
-    public ArrayList<Task> getTodo() {
+    public List<Task> getTodo() {
         return todo;
     }
 
-    public ArrayList<Task> getDoing() {
+    public List<Task> getDoing() {
         return doing;
     }
 
-    public ArrayList<Task> getDone() {
+    public List<Task> getDone() {
         return done;
     }
 
-    public void getTasks(ArrayList<Task> arrayList) {
+    public void getTasks(List<Task> arrayList) {
 
         if (arrayList.isEmpty()) {
             System.out.println("(No tasks)");
@@ -46,7 +46,7 @@ public class Board {
         }
     }
 
-    public ArrayList<Task> getList(String name) {
+    public List<Task> getList(String name) {
         if ("todo".equalsIgnoreCase(name)) return getTodo();
         if ("doing".equalsIgnoreCase(name)) return getDoing();
         if ("done".equalsIgnoreCase(name)) return getDone();
@@ -54,30 +54,36 @@ public class Board {
         return null;
     }
 
-    public Task getTaskById(ArrayList<Task> arrayList, int id) {
-        for (Task task : arrayList) {
+    public Task getTaskById(List<Task> list, int id) {
+        for (Task task : list) {
             if (task.getId() == id) {
                 return task;
             }
         }
-        System.out.println("Task not found");
+
         return null;
     }
 
-    public void removeTaskById(ArrayList<Task> arrayList, int id) {
-        arrayList.removeIf(task -> task.getId() == id);
+    public boolean removeTaskById(List<Task> list, int id) {
+        for (Task task : list) {
+            if (task.getId() == id) {
+                list.remove(task);
+                return true;
+            }
+        }
+        return false;
     }
 
     // move a task from list1 to list2
-    public void moveTaskById(ArrayList<Task> list1, ArrayList<Task> list2, int id) {
+    public boolean moveTaskById(List<Task> list1, List<Task> list2, int id) {
         Task task = this.getTaskById(list1, id);
 
         if (task != null) {
             this.removeTaskById(list1, id);
             this.addTask(list2, task);
-            System.out.println("Task moved successfully");
+            return true;
         } else {
-            System.out.println("Task not found");
+            return false;
         }
     }
 }
