@@ -1,6 +1,7 @@
 package org.example;
 import java.util.ArrayList;
 import java.util.List;
+import org.example.Column;
 
 public class Board {
     private final ArrayList<Task> todo;
@@ -17,6 +18,14 @@ public class Board {
         this.todo = new ArrayList<>(todo);
         this.doing = new ArrayList<>(doing);
         this.done = new ArrayList<>(done);
+    }
+
+    public List<Task> get(Column column) {
+        return switch (column) {
+            case TODO -> this.todo;
+            case DOING -> this.doing;
+            case DONE -> this.done;
+        };
     }
 
     public void addTask(List<Task> list, Task task) {
