@@ -50,9 +50,11 @@ public class Board {
     // function to remove task from list using enum
     public boolean remove(int id) {
         for (Column col : Column.values()) {
-            for (Task t : get(col)) {
+            List<Task> list = get(col);
+
+            for (Task t : list) {
                 if (t.getId() == id) {
-                    get(col).remove(t);
+                    list.remove(t);
                     return true;
                 }
             }

@@ -18,10 +18,16 @@ public class Main {
 
     }
 
-    public static List<Task> parseUserListSelection(String input, Board board) {
-        Column listColumn = parseColumn(input);
-
-        return board.get(listColumn);
+    public static int readIntOrFail(Scanner scanner, String prompt) {
+        while (true) {
+        System.out.println(prompt);
+        String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid number");
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -82,16 +88,8 @@ public class Main {
                     board.getTasks(listSelection);
                     break;
                 case "find":
-                    System.out.println("Enter the id of the task you want to find: ");
-                    String idInput = scanner.nextLine();
-                    int findTaskId;
-
-                    try {
-                        findTaskId = Integer.parseInt(idInput);
-                    } catch(NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a number.");
-                        break;
-                    }
+                    String findPrompt = "Enter the id of the task you want to find: ";
+                    int findTaskId = readIntOrFail(scanner, findPrompt);
 
                     Task foundTask = board.find(findTaskId);
 
@@ -130,16 +128,8 @@ public class Main {
                     }
                     break;
                 case "del":
-                    System.out.println("Enter id of task to delete: ");
-                    String delString = scanner.nextLine();
-                    int delId;
-
-                    try {
-                        delId = Integer.parseInt(delString);
-                    } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid id");
-                        break;
-                    }
+                    String delPrompt = "Enter id of task to delete: ";
+                    int delId = readIntOrFail(scanner, delPrompt);
 
                     boolean result = board.remove(delId);
 
@@ -155,7 +145,7 @@ public class Main {
                     System.out.println("  list - List tasks in a specific list");
                     System.out.println("  find - Find task by id");
                     System.out.println("  move - Move a task between lists");
-                    System.out.println("  del  - Delete a task from a list");
+                    System.out.println("  del  - Delete a task by entering its id");
                     System.out.println("  quit - Exit the program");
                     break;
                 case "quit":
