@@ -47,6 +47,20 @@ public class Board {
         return null;
     }
 
+    // function to remove task from list using enum
+    public boolean remove(int id) {
+        for (Column col : Column.values()) {
+            for (Task t : get(col)) {
+                if (t.getId() == id) {
+                    get(col).remove(t);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     // CLI Version for String input to add tasks to list
     public void addTask(List<Task> list, Task task) {
         list.add(task);

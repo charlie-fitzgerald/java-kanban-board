@@ -18,6 +18,12 @@ public class Main {
 
     }
 
+    public static List<Task> parseUserListSelection(String input, Board board) {
+        Column listColumn = parseColumn(input);
+
+        return board.get(listColumn);
+    }
+
     public static void main(String[] args) {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
@@ -124,17 +130,18 @@ public class Main {
                     }
                     break;
                 case "del":
-                    System.out.println("Pick a list to delete a task from: todo, doing, done");
-                    List<Task> delList = board.getList(scanner.nextLine().toLowerCase());
+                    System.out.println("Enter id of task to delete: ");
+                    String delString = scanner.nextLine();
+                    int delId;
 
-                    if (delList == null) {
+                    try {
+                        delId = Integer.parseInt(delString);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please enter a valid id");
                         break;
                     }
 
-                    System.out.println("Enter id of task to delete: ");
-                    int delId = Integer.parseInt(scanner.nextLine());
-
-                    boolean result = board.removeTaskById(delList, delId);
+                    boolean result = board.remove(delId);
 
                     if (result) {
                         System.out.println("Task removed successfully");
