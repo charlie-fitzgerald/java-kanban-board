@@ -8,6 +8,24 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
+    public Column userInputParser(String input) {
+        input = input.trim().toLowerCase();
+
+        if (input.equals("todo")) {
+            return Column.TODO;
+        }
+
+        if (input.equals("doing")) {
+            return Column.DOING;
+        }
+
+        if (input.equals("done")) {
+            return Column.DONE;
+        }
+
+        return null;
+    }
+
     public static void main(String[] args) {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
