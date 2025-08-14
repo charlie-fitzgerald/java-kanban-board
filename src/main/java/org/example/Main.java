@@ -38,14 +38,14 @@ public class Main {
             switch (input) {
                 case "add":
                     System.out.println("Add a task to a list");
-                    System.out.println("Type the list you want to add it to, followed by: <id>, <title>, <description>, <priority>");
+                    System.out.println("You'll be prompted to enter the following info: <title>, <description>, <priority>");
 
-                    System.out.println("Select list: todo, doing, done");
-                    List<Task> addList = board.getList(scanner.nextLine().toLowerCase());
-
-                    if (addList == null) {
-                        break;
-                    }
+//                    System.out.println("Select list: todo, doing, done");
+//                    List<Task> addList = board.getList(scanner.nextLine().toLowerCase());
+//
+//                    if (addList == null) {
+//                        break;
+//                    }
 
                     System.out.println("Enter title:");
                     String title = scanner.nextLine();
@@ -72,7 +72,7 @@ public class Main {
 
                     Task newTask = new Task(taskId++, title, description, priority);
 
-                    board.addTask(addList, newTask);
+                    board.add(newTask);
 
                     System.out.println("New task added successfully!");
                     break;

@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.example.Column;
 
+import static org.example.Column.TODO;
+
 public class Board {
     private final ArrayList<Task> todo;
     private final ArrayList<Task> doing;
@@ -20,6 +22,7 @@ public class Board {
         this.done = new ArrayList<>(done);
     }
 
+    // enum version of listing
     public List<Task> get(Column column) {
         return switch (column) {
             case TODO -> this.todo;
@@ -28,6 +31,14 @@ public class Board {
         };
     }
 
+    // enum version to add tasks to todo by default
+    public void add(Task task) {
+        get(TODO).add(task);
+    }
+
+    // function to find task in enum Columns by id
+
+    // CLI Version for String input to add tasks to list
     public void addTask(List<Task> list, Task task) {
         list.add(task);
     }
