@@ -1,6 +1,4 @@
 package org.example;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,22 +6,16 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    public Column userInputParser(String input) {
+    public static Column parseColumn(String input) {
         input = input.trim().toLowerCase();
 
-        if (input.equals("todo")) {
-            return Column.TODO;
-        }
+        return switch (input) {
+            case "todo" -> Column.TODO;
+            case "doing" -> Column.DOING;
+            case "done" -> Column.DONE;
+            default -> null;
+        };
 
-        if (input.equals("doing")) {
-            return Column.DOING;
-        }
-
-        if (input.equals("done")) {
-            return Column.DONE;
-        }
-
-        return null;
     }
 
     public static void main(String[] args) {
@@ -32,20 +24,13 @@ public class Main {
         int taskId = 0;
 
         while(true) {
-            System.out.println("Available commands: add | list | move | del | help | quit");
+            System.out.println("Available commands: add | list | find | move | del | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
                 case "add":
                     System.out.println("Add a task to a list");
                     System.out.println("You'll be prompted to enter the following info: <title>, <description>, <priority>");
-
-//                    System.out.println("Select list: todo, doing, done");
-//                    List<Task> addList = board.getList(scanner.nextLine().toLowerCase());
-//
-//                    if (addList == null) {
-//                        break;
-//                    }
 
                     System.out.println("Enter title:");
                     String title = scanner.nextLine();
@@ -79,13 +64,38 @@ public class Main {
 
                 case "list":
                     System.out.println("Select list: todo, doing, done");
-                    List<Task> listSelection = board.getList(scanner.nextLine().toLowerCase());
+                    String userListSelection = scanner.nextLine();
+                    Column listColumn = parseColumn(userListSelection);
 
-                    if (listSelection == null) {
+                    if (listColumn == null) {
+                        System.out.println("List not found");
                         break;
                     }
 
+                    List<Task> listSelection = board.get(listColumn);
                     board.getTasks(listSelection);
+                    break;
+                case "find":
+                    System.out.println("Enter the id of the task you want to find: ");
+                    String idInput = scanner.nextLine();
+                    int findTaskId;
+
+                    try {
+                        findTaskId = Integer.parseInt(idInput);
+                    } catch(NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                        break;
+                    }
+
+                    Task foundTask = board.find(findTaskId);
+
+                    if (foundTask == null) {
+                        System.out.println("Task not found");
+                        break;
+                    } else {
+                        System.out.println("Here's your task: ");
+                        System.out.println(foundTask);
+                    }
                     break;
                 case "move":
                     System.out.println("Move from which list: todo, doing, done");
@@ -136,6 +146,7 @@ public class Main {
                     System.out.println("Commands:");
                     System.out.println("  add  - Add a new task to a list");
                     System.out.println("  list - List tasks in a specific list");
+                    System.out.println("  find - Find task by id");
                     System.out.println("  move - Move a task between lists");
                     System.out.println("  del  - Delete a task from a list");
                     System.out.println("  quit - Exit the program");

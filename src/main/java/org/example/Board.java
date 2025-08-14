@@ -1,9 +1,6 @@
 package org.example;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.Column;
-
-import static org.example.Column.TODO;
 
 public class Board {
     private final ArrayList<Task> todo;
@@ -33,10 +30,22 @@ public class Board {
 
     // enum version to add tasks to todo by default
     public void add(Task task) {
-        get(TODO).add(task);
+        get(Column.TODO).add(task);
     }
 
     // function to find task in enum Columns by id
+    // will search TODO -> DOING -> DONE
+    public Task find(int id) {
+        for (Column col : Column.values()) {
+            for (Task t : get(col)) {
+                if (t.getId() == id) {
+                    return t;
+                }
+            }
+
+        }
+        return null;
+    }
 
     // CLI Version for String input to add tasks to list
     public void addTask(List<Task> list, Task task) {
