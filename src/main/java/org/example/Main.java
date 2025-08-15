@@ -35,6 +35,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int taskId = 0;
 
+
+
         while(true) {
             System.out.println("Available commands: add | list | find | move | del | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();

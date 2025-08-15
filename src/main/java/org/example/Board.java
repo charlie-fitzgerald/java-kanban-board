@@ -93,6 +93,24 @@ public class Board {
         }
     }
 
+    public SaveData toSaveData() {
+        List<Task> todoCopy = getTodo();
+        List<Task> doingCopy = getDoing();
+        List<Task> doneCopy = getDone();
+
+        return new SaveData(todoCopy, doingCopy, doneCopy);
+    }
+
+    public void loadFrom(SaveData data) {
+        todo.clear();
+        doing.clear();
+        done.clear();
+
+        todo.addAll(data.getTodo());
+        doing.addAll(data.getDoing());
+        done.addAll(data.getDone());
+    }
+
     public List<Task> getTodo() {
         return todo;
     }
