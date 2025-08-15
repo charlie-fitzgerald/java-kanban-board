@@ -82,9 +82,15 @@ public class Board {
         }
     }
 
-    // CLI Version for String input to add tasks to list
-    public void addTask(List<Task> list, Task task) {
-        list.add(task);
+    public void getTasks(List<Task> arrayList) {
+
+        if (arrayList.isEmpty()) {
+            System.out.println("(No tasks)");
+        } else {
+            for (Task task : arrayList) {
+                System.out.println(task);
+            }
+        }
     }
 
     public List<Task> getTodo() {
@@ -99,55 +105,5 @@ public class Board {
         return done;
     }
 
-    public void getTasks(List<Task> arrayList) {
 
-        if (arrayList.isEmpty()) {
-            System.out.println("(No tasks)");
-        } else {
-            for (Task task : arrayList) {
-                System.out.println(task);
-            }
-        }
-    }
-
-    public List<Task> getList(String name) {
-        if ("todo".equalsIgnoreCase(name)) return getTodo();
-        if ("doing".equalsIgnoreCase(name)) return getDoing();
-        if ("done".equalsIgnoreCase(name)) return getDone();
-        System.out.println("Select a valid list");
-        return null;
-    }
-
-    public Task getTaskById(List<Task> list, int id) {
-        for (Task task : list) {
-            if (task.getId() == id) {
-                return task;
-            }
-        }
-
-        return null;
-    }
-
-    public boolean removeTaskById(List<Task> list, int id) {
-        for (Task task : list) {
-            if (task.getId() == id) {
-                list.remove(task);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // move a task from list1 to list2
-    public boolean moveTaskById(List<Task> list1, List<Task> list2, int id) {
-        Task task = this.getTaskById(list1, id);
-
-        if (task != null) {
-            this.removeTaskById(list1, id);
-            this.addTask(list2, task);
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
