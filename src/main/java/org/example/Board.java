@@ -63,6 +63,25 @@ public class Board {
         return false;
     }
 
+    // function to move task from one list to another using enum
+    public boolean move(int id, Column to) {
+        List<Task> toList = get(to);
+        if (toList == null) {
+            System.out.println("You shouldn't have made it to this branch");
+            return false;
+        }
+
+        Task moveTask = find(id);
+
+        if (moveTask != null) {
+            remove(id);
+            toList.add(moveTask);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // CLI Version for String input to add tasks to list
     public void addTask(List<Task> list, Task task) {
         list.add(task);

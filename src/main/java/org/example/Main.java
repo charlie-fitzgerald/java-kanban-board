@@ -102,24 +102,21 @@ public class Main {
                     }
                     break;
                 case "move":
-                    System.out.println("Move from which list: todo, doing, done");
-                    List<Task> fromList = board.getList(scanner.nextLine().toLowerCase());
+                    String movePrompt = "Enter the id of task you want to move: ";
 
-                    if (fromList == null) {
-                        break;
-                    }
+                    int moveTaskId = readIntOrFail(scanner, movePrompt);
 
-                    System.out.println("Move to which list: todo, doing, done");
-                    List<Task> toList = board.getList(scanner.nextLine().toLowerCase());
+                    System.out.println("Enter which list you want to move the task to: todo, doing, done");
+                    String moveInput = scanner.nextLine();
+
+                    Column toList = parseColumn(moveInput);
 
                     if (toList == null) {
+                        System.out.println("Enter a valid list");
                         break;
                     }
 
-                    System.out.println("Id of task to move");
-                    int moveTaskId = Integer.parseInt(scanner.nextLine());
-
-                    boolean taskMoved = board.moveTaskById(fromList, toList, moveTaskId);
+                    boolean taskMoved = board.move(moveTaskId, toList);
 
                     if (taskMoved) {
                         System.out.println("Task moved successfully");
