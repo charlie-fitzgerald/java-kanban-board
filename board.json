@@ -1,1 +1,25 @@
-{"todo":[{"id":0,"title":"Task1","description":"task1","priority":1}],"doing":[{"id":1,"title":"task2","description":"task2","priority":2}],"done":[]}
+{
+  "todo": [
+    {
+      "id": 0,
+      "title": "Task1",
+      "description": "task1",
+      "priority": 1
+    },
+    {
+      "id": 0,
+      "title": "task 3",
+      "description": "task 3",
+      "priority": 2
+    }
+  ],
+  "doing": [
+    {
+      "id": 1,
+      "title": "task2",
+      "description": "task2",
+      "priority": 2
+    }
+  ],
+  "done": []
+}

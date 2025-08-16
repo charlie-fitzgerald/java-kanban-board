@@ -38,7 +38,7 @@ public class Main {
 
 
         while(true) {
-            System.out.println("Available commands: add | list | find | move | del | save | help | quit");
+            System.out.println("Available commands: add | list | find | move | del | save | load | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -148,6 +148,16 @@ public class Main {
                     }
 
                     break;
+                case "load":
+                    boolean load = board.load();
+
+                    if (load) {
+                        System.out.println("Data loaded");
+                    } else {
+                        System.out.println("Loading data failed");
+                    }
+
+                    break;
                 case "help":
                     System.out.println("Commands:");
                     System.out.println("  add  - Add a new task to a list");
@@ -156,6 +166,7 @@ public class Main {
                     System.out.println("  move - Move a task between lists");
                     System.out.println("  del  - Delete a task by entering its id");
                     System.out.println("  save  - Save the current data");
+                    System.out.println("  load  - Load data from a save file");
                     System.out.println("  quit - Exit the program");
                     break;
                 case "quit":

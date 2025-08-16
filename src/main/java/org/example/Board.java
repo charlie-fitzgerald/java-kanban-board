@@ -2,10 +2,9 @@ package org.example;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 
 public class Board {
     private final ArrayList<Task> todo;
@@ -123,6 +122,17 @@ public class Board {
 
         try(FileWriter writer = new FileWriter(SAVE_FILE)) {
             gson.toJson(data, writer);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean load() {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(SAVE_FILE)) {
+            SaveData data = gson.fromJson(reader, SaveData.class);
+            loadFrom(data);
             return true;
         } catch (IOException e) {
             return false;
