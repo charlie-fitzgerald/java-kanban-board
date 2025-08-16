@@ -1,11 +1,17 @@
 package org.example;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 public class Board {
     private final ArrayList<Task> todo;
     private final ArrayList<Task> doing;
     private final ArrayList<Task> done;
+    private static final String SAVE_FILE = "board.json";
 
     // Default constructor (starts empty)
     public Board() {
@@ -109,6 +115,18 @@ public class Board {
         todo.addAll(data.getTodo());
         doing.addAll(data.getDoing());
         done.addAll(data.getDone());
+    }
+
+    public boolean save() {
+        SaveData data = toSaveData();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try(FileWriter writer = new FileWriter(SAVE_FILE)) {
+            gson.toJson(data, writer);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public List<Task> getTodo() {

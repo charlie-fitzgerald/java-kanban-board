@@ -38,7 +38,7 @@ public class Main {
 
 
         while(true) {
-            System.out.println("Available commands: add | list | find | move | del | help | quit");
+            System.out.println("Available commands: add | list | find | move | del | save | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -138,6 +138,16 @@ public class Main {
                         System.out.println("Task not found");
                     }
                     break;
+                case "save":
+                    boolean save = board.save();
+
+                    if (save) {
+                        System.out.println("Save complete");
+                    } else {
+                        System.out.println("Save failed");
+                    }
+
+                    break;
                 case "help":
                     System.out.println("Commands:");
                     System.out.println("  add  - Add a new task to a list");
@@ -145,6 +155,7 @@ public class Main {
                     System.out.println("  find - Find task by id");
                     System.out.println("  move - Move a task between lists");
                     System.out.println("  del  - Delete a task by entering its id");
+                    System.out.println("  save  - Save the current data");
                     System.out.println("  quit - Exit the program");
                     break;
                 case "quit":
