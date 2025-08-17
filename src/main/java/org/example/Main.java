@@ -54,7 +54,7 @@ public class Main {
 
                     int priority; // will be set by the loop
                     while (true) {
-                        System.out.println("Enter priority of task as a value between 1–3:");
+                        System.out.println("Enter priority of task as a value between 1-3:");
                         String line = scanner.nextLine().trim();
                         try {
                             int parsed = Integer.parseInt(line);
