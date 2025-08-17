@@ -151,5 +151,9 @@ public class Board {
         return done;
     }
 
+    public String getSaveFilePath() {
+        return SAVE_FILE;
+    }
+
 
 }

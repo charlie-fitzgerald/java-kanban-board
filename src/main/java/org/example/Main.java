@@ -140,21 +140,19 @@ public class Main {
                     break;
                 case "save":
                     boolean save = board.save();
-
                     if (save) {
-                        System.out.println("Save complete");
+                        System.out.printf("Board successfully saved to %s%n", board.getSaveFilePath());
                     } else {
-                        System.out.println("Save failed");
+                        System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
                     }
-
                     break;
                 case "load":
                     boolean load = board.load();
 
                     if (load) {
-                        System.out.println("Data loaded");
+                        System.out.printf("Data successfully loaded from %s%n", board.getSaveFilePath());
                     } else {
-                        System.out.println("Loading data failed");
+                        System.out.printf("Loading data from %s%n failed", board.getSaveFilePath());
                     }
 
                     break;
