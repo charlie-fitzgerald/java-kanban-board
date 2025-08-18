@@ -1,4 +1,4 @@
-package org.example;
+package com.charlesfitzgerald.kanban;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -1,4 +1,4 @@
-package org.example;
+package com.charlesfitzgerald.kanban;
 
 public class Task {
     private final int id;

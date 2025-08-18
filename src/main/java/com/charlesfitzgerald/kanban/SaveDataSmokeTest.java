@@ -1,4 +1,4 @@
-package org.example;
+package com.charlesfitzgerald.kanban;
 
 public class SaveDataSmokeTest {
     public static void main(String[] args) {
