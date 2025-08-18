@@ -10,6 +10,7 @@ public class Board {
     private final ArrayList<Task> todo;
     private final ArrayList<Task> doing;
     private final ArrayList<Task> done;
+    private long nextId;
     private static final String SAVE_FILE = "board.json";
 
     // Default constructor (starts empty)
@@ -22,6 +23,7 @@ public class Board {
         this.todo = new ArrayList<>(todo);
         this.doing = new ArrayList<>(doing);
         this.done = new ArrayList<>(done);
+        this.nextId = 0;
     }
 
     // enum version of listing
@@ -40,7 +42,7 @@ public class Board {
 
     // function to find task in enum Columns by id
     // will search TODO -> DOING -> DONE
-    public Task find(int id) {
+    public Task find(long id) {
         for (Column col : Column.values()) {
             for (Task t : get(col)) {
                 if (t.getId() == id) {
@@ -53,7 +55,7 @@ public class Board {
     }
 
     // function to remove task from list using enum
-    public boolean remove(int id) {
+    public boolean remove(long id) {
         for (Column col : Column.values()) {
             List<Task> list = get(col);
 
@@ -69,7 +71,7 @@ public class Board {
     }
 
     // function to move task from one list to another using enum
-    public boolean move(int id, Column to) {
+    public boolean move(long id, Column to) {
         List<Task> toList = get(to);
         if (toList == null) {
             System.out.println("You shouldn't have made it to this branch");
@@ -128,11 +130,28 @@ public class Board {
         }
     }
 
+    public long getMaxId() {
+        long maxId = 0;
+
+        for (Column col : Column.values()) {
+            List<Task> list = get(col);
+
+            for (Task t : list) {
+                if (t.getId() > maxId) {
+                    maxId = t.getId();
+                }
+            }
+        }
+
+        return maxId;
+    }
+
     public boolean load() {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(SAVE_FILE)) {
             SaveData data = gson.fromJson(reader, SaveData.class);
             loadFrom(data);
+            nextId = getMaxId() + 1;
             return true;
         } catch (IOException e) {
             return false;
@@ -149,6 +168,24 @@ public class Board {
 
     public List<Task> getDone() {
         return done;
+    }
+
+    // simple getter method for seeing what the next id will be
+    public long getNextId() {
+        return nextId;
+    }
+
+    public void setNextId() {
+        nextId += 1;
+    }
+
+    // method to assign a task an id, then increase the global nextId count
+    public long nextId() {
+        long nextId = getNextId();
+
+        setNextId();
+
+        return nextId;
     }
 
     public String getSaveFilePath() {

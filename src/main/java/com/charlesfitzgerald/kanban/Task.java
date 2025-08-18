@@ -6,7 +6,7 @@ public class Task {
     private String description;
     private int priority;
 
-    public Task(int id, String title, String description, int priority) {
+    public Task(long id, String title, String description, int priority) {
         this.id = id;
         this.title = title;
         this.description = description;

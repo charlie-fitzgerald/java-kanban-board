@@ -1,25 +1,38 @@
 {
   "todo": [
     {
-      "id": 0,
-      "title": "Task1",
-      "description": "task1",
+      "id": 1,
+      "title": "task2",
+      "description": "task2",
       "priority": 1
     },
     {
-      "id": 0,
-      "title": "task 3",
-      "description": "task 3",
+      "id": 2,
+      "title": "task3",
+      "description": "task3",
+      "priority": 1
+    },
+    {
+      "id": 4,
+      "title": "new task",
+      "description": "it\u0027s a new task! Sparkly clean!",
       "priority": 2
     }
   ],
   "doing": [
     {
-      "id": 1,
-      "title": "task2",
-      "description": "task2",
-      "priority": 2
+      "id": 0,
+      "title": "task1",
+      "description": "task1",
+      "priority": 1
     }
   ],
-  "done": []
+  "done": [
+    {
+      "id": 3,
+      "title": "task4",
+      "description": "task4",
+      "priority": 3
+    }
+  ]
 }

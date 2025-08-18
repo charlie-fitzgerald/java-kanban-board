@@ -34,15 +34,24 @@ public class Main {
         }
     }
 
+    public static long readLongOrFail(@NotNull Scanner scanner, String prompt) {
+        while(true) {
+            System.out.println(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                return Long.parseLong(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid number");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
-        int taskId = 0;
-
-
 
         while(true) {
-            System.out.println("Available commands: add | list | find | move | del | save | load | help | quit");
+            System.out.println("Available commands: add | list | find | move | del | save | load | version | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -73,7 +82,7 @@ public class Main {
                         }
                     }
 
-                    Task newTask = new Task(taskId++, title, description, priority);
+                    Task newTask = new Task(board.nextId(), title, description, priority);
 
                     board.add(newTask);
 
@@ -95,7 +104,7 @@ public class Main {
                     break;
                 case "find":
                     String findPrompt = "Enter the id of the task you want to find: ";
-                    int findTaskId = readIntOrFail(scanner, findPrompt);
+                    long findTaskId = readLongOrFail(scanner, findPrompt);
 
                     Task foundTask = board.find(findTaskId);
 
@@ -110,7 +119,7 @@ public class Main {
                 case "move":
                     String movePrompt = "Enter the id of task you want to move: ";
 
-                    int moveTaskId = readIntOrFail(scanner, movePrompt);
+                    long moveTaskId = readLongOrFail(scanner, movePrompt);
 
                     System.out.println("Enter which list you want to move the task to: todo, doing, done");
                     String moveInput = scanner.nextLine();
@@ -132,7 +141,7 @@ public class Main {
                     break;
                 case "del":
                     String delPrompt = "Enter id of task to delete: ";
-                    int delId = readIntOrFail(scanner, delPrompt);
+                    long delId = readLongOrFail(scanner, delPrompt);
 
                     boolean result = board.remove(delId);
 
