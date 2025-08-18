@@ -100,6 +100,12 @@ public class Board {
         }
     }
 
+    public void edit(Task t, String title, String description, int priority) {
+        t.setTitle(title);
+        t.setDescription(description);
+        t.setPriority(priority);
+    }
+
     public void getTasks(List<Task> arrayList) {
 
         if (arrayList.isEmpty()) {

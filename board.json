@@ -2,8 +2,8 @@
   "todo": [
     {
       "id": 1,
-      "title": "task2",
-      "description": "task2",
+      "title": "Task 2",
+      "description": "It\u0027s task 2",
       "priority": 1
     },
     {
@@ -17,6 +17,12 @@
       "title": "new task",
       "description": "it\u0027s a new task! Sparkly clean!",
       "priority": 2
+    },
+    {
+      "id": 5,
+      "title": "new task",
+      "description": "it\u0027s a test task, a task to test",
+      "priority": 1
     }
   ],
   "doing": [

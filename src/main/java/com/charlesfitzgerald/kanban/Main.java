@@ -37,6 +37,7 @@ public class Main {
     public static long readLongOrFail(@NotNull Scanner scanner, String prompt) {
         while(true) {
             System.out.println(prompt);
+            System.out.print("> ");
             String input = scanner.nextLine().trim();
             try {
                 return Long.parseLong(input);
@@ -51,7 +52,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
-            System.out.println("Available commands: add | list | find | move | del | save | load | version | help | quit");
+            System.out.println("Available commands: add | list | find | move | edit | del | save | load | version | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -60,14 +61,17 @@ public class Main {
                     System.out.println("You'll be prompted to enter the following info: <title>, <description>, <priority>");
 
                     System.out.println("Enter title:");
+                    System.out.print("> ");
                     String title = scanner.nextLine();
 
                     System.out.println("Enter description:");
+                    System.out.print("> ");
                     String description = scanner.nextLine();
 
                     int priority; // will be set by the loop
                     while (true) {
                         System.out.println("Enter priority of task as a value between 1-3:");
+                        System.out.print("> ");
                         String line = scanner.nextLine().trim();
                         try {
                             int parsed = Integer.parseInt(line);
@@ -91,6 +95,7 @@ public class Main {
 
                 case "list":
                     System.out.println("Select list: todo, doing, done");
+                    System.out.print("> ");
                     String userListSelection = scanner.nextLine();
                     Column listColumn = parseColumn(userListSelection);
 
@@ -104,6 +109,7 @@ public class Main {
                     break;
                 case "find":
                     String findPrompt = "Enter the id of the task you want to find: ";
+                    System.out.print("> ");
                     long findTaskId = readLongOrFail(scanner, findPrompt);
 
                     Task foundTask = board.find(findTaskId);
@@ -119,6 +125,7 @@ public class Main {
                     break;
                 case "move":
                     String movePrompt = "Enter the id of task you want to move: ";
+                    System.out.print("> ");
 
                     long moveTaskId = readLongOrFail(scanner, movePrompt);
 
@@ -140,8 +147,94 @@ public class Main {
                         System.out.println("Task not found");
                     }
                     break;
+                case "edit":
+                    String editPrompt = "Enter id of task to edit: ";
+                    long editId = readLongOrFail(scanner, editPrompt);
+                    Task editTask = board.find(editId);
+
+                    if (editTask == null) {
+                        System.out.println("Task not found");
+                        break;
+                    }
+
+                    String newTitle;
+                    String newDescription;
+                    int newPriority;
+                    boolean editTitle = true;
+                    boolean editDescription = true;
+                    boolean editPriority = true;
+
+                    while (true){
+                        System.out.println("Current title: " + editTask.getTitle());
+                        System.out.println("Edit title? (y or n)");
+                        System.out.print("> ");
+                        String editTitleQuery = scanner.nextLine().trim().toLowerCase();
+
+                        if (editTitleQuery.equals("y")) {
+                            System.out.println("Enter new title: ");
+                            System.out.print("> ");
+                            newTitle = scanner.nextLine();
+                            break;
+                        } else if (editTitleQuery.equals("n")) {
+                            System.out.println("Title not changed");
+                            newTitle = editTask.getTitle();
+                            editTitle = false;
+                            break;
+                        } else {
+                            System.out.println("Enter y or n");
+                        }
+                    }
+                    while (true){
+                        System.out.println("Current description: " + editTask.getDescription());
+                        System.out.println("Edit Description? (y or n)");
+                        String editDescriptionQuery = scanner.nextLine().trim().toLowerCase();
+
+                        if (editDescriptionQuery.equals("y")) {
+                            System.out.println("Enter new description: ");
+                            System.out.print("> ");
+                            newDescription = scanner.nextLine();
+                            break;
+                        } else if (editDescriptionQuery.equals("n")) {
+                            System.out.println("Description not changed");
+                            newDescription = editTask.getDescription();
+                            editDescription = false;
+                            break;
+                        } else {
+                            System.out.println("Enter y or n");
+                        }
+                    }
+                    while (true){
+                        System.out.println("Current priority: " + editTask.getPriority());
+                        System.out.println("Edit Priority? (y or n)");
+                        String editPriorityQuery = scanner.nextLine().trim().toLowerCase();
+
+                        if (editPriorityQuery.equals("y")) {
+                            System.out.println("Enter new priority");
+                            System.out.print("> ");
+                            newPriority = Integer.parseInt(scanner.nextLine());
+                            break;
+                        } else if (editPriorityQuery.equals("n")) {
+                            newPriority = editTask.getPriority();
+                            editPriority= false;
+                            break;
+                        } else {
+                            System.out.println("Enter y or n");
+                        }
+                    }
+
+                    if (!editTitle && !editDescription && !editPriority) {
+                        System.out.println("Task not edited");
+                        break;
+                    }
+
+                    board.edit(editTask, newTitle, newDescription, newPriority);
+                    System.out.println("Task edited successfully");
+                    System.out.println("Edited task: " + editTask);
+
+                    break;
                 case "del":
                     String delPrompt = "Enter id of task to delete: ";
+                    System.out.print("> ");
                     long delId = readLongOrFail(scanner, delPrompt);
 
                     boolean result = board.remove(delId);
