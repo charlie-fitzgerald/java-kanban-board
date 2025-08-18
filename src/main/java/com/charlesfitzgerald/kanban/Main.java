@@ -1,4 +1,6 @@
 package com.charlesfitzgerald.kanban;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,6 +9,7 @@ import java.util.Scanner;
 public class Main {
     public static String VERSION = "0.1.0";
 
+    @org.jetbrains.annotations.Nullable
     public static Column parseColumn(String input) {
         input = input.trim().toLowerCase();
 
@@ -19,7 +22,7 @@ public class Main {
 
     }
 
-    public static int readIntOrFail(Scanner scanner, String prompt) {
+    public static int readIntOrFail(@NotNull Scanner scanner, String prompt) {
         while (true) {
         System.out.println(prompt);
         String input = scanner.nextLine().trim();
