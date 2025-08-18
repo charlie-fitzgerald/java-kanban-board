@@ -5,6 +5,7 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+    public static String VERSION = "0.1.0";
 
     public static Column parseColumn(String input) {
         input = input.trim().toLowerCase();
@@ -165,7 +166,11 @@ public class Main {
                     System.out.println("  del  - Delete a task by entering its id");
                     System.out.println("  save  - Save the current data");
                     System.out.println("  load  - Load data from a save file");
+                    System.out.println(" version - View the current version of the software");
                     System.out.println("  quit - Exit the program");
+                    break;
+                case "version":
+                    System.out.println("Kanban CLI - Version " + VERSION);
                     break;
                 case "quit":
                     System.out.println("Thanks for using this program!");
