@@ -7,7 +7,7 @@ import java.util.Scanner;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static String VERSION = "0.1.0";
+    public static String VERSION = "0.2.0";
 
     @org.jetbrains.annotations.Nullable
     public static Column parseColumn(String input) {
@@ -107,12 +107,13 @@ public class Main {
                     long findTaskId = readLongOrFail(scanner, findPrompt);
 
                     Task foundTask = board.find(findTaskId);
+                    String foundTaskCol = board.getColName(findTaskId);
 
                     if (foundTask == null) {
                         System.out.println("Task not found");
                         break;
                     } else {
-                        System.out.println("Here's your task: ");
+                        System.out.println("Task found in " + foundTaskCol);
                         System.out.println(foundTask);
                     }
                     break;
