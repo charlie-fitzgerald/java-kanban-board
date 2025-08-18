@@ -269,6 +269,7 @@ public class Main {
                     System.out.println("  list    - List tasks in a specific list");
                     System.out.println("  find    - Find task by id");
                     System.out.println("  move    - Move a task between lists");
+                    System.out.println("  edit    - Edit a task by entering its id");
                     System.out.println("  del     - Delete a task by entering its id");
                     System.out.println("  save    - Save the current data");
                     System.out.println("  load    - Load data from a save file");
