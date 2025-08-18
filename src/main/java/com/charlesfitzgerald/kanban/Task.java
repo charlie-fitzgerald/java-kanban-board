@@ -1,7 +1,7 @@
 package com.charlesfitzgerald.kanban;
 
 public class Task {
-    private final int id;
+    private final long id;
     private String title;
     private String description;
     private int priority;
@@ -13,7 +13,7 @@ public class Task {
         this.priority = priority;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
