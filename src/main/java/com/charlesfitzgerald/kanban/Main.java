@@ -51,6 +51,12 @@ public class Main {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
 
+        boolean loadOnStartUp = board.load();
+
+        if (loadOnStartUp) {
+            System.out.printf("Board successfully loaded from %s%n", board.getSaveFilePath());
+        }
+
         while(true) {
             System.out.println("Available commands: add | list | find | move | edit | del | save | load | version | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
@@ -128,6 +134,13 @@ public class Main {
                     System.out.print("> ");
 
                     long moveTaskId = readLongOrFail(scanner, movePrompt);
+
+                    Task moveTask = board.find(moveTaskId);
+
+                    if (moveTask == null) {
+                        System.out.println("Task not found");
+                        break;
+                    }
 
                     System.out.println("Enter which list you want to move the task to: todo, doing, done");
                     String moveInput = scanner.nextLine();
@@ -266,7 +279,7 @@ public class Main {
                 case "help":
                     System.out.println("Commands:");
                     System.out.println("  add     - Add a new task to a list");
-                    System.out.println("  list    - List tasks in a specific list");
+                    System.out.println("  list    - List tasks in a specific list. Can use --sorted and --by-priority flags");
                     System.out.println("  find    - Find task by id");
                     System.out.println("  move    - Move a task between lists");
                     System.out.println("  edit    - Edit a task by entering its id");
@@ -280,7 +293,15 @@ public class Main {
                     System.out.println("Kanban CLI - Version " + VERSION);
                     break;
                 case "quit":
+                    boolean quitSave = board.save();
+
+                    if (quitSave) {
+                        System.out.printf("Board successfully saved to %s%n", board.getSaveFilePath());
+                    } else {
+                        System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
+                    }
                     System.out.println("Thanks for using this program!");
+
                     return;
                 default:
                     System.out.println("Pick a valid option");

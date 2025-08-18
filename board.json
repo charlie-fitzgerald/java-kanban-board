@@ -23,6 +23,12 @@
       "title": "new task",
       "description": "it\u0027s a test task, a task to test",
       "priority": 1
+    },
+    {
+      "id": 6,
+      "title": "Time management",
+      "description": "Or Something",
+      "priority": 2
     }
   ],
   "doing": [
