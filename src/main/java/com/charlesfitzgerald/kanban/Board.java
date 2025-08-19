@@ -65,6 +65,17 @@ public class Board {
         return null;
     }
 
+    public Column getCol(long id) {
+        for (Column col : Column.values()) {
+            for (Task t : get(col)) {
+                if(t.getId() == id) {
+                    return col;
+                }
+            }
+        }
+        return null;
+    }
+
     // function to remove task from list using enum
     public boolean remove(long id) {
         for (Column col : Column.values()) {

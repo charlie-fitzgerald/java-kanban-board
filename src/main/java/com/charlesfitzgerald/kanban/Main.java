@@ -72,6 +72,12 @@ public class Main {
         }
     }
 
+    // returns formatted task String
+    static String formatTaskLine(Task t, Column col) {
+        return String.format("[#%d] %s (prio %d) in %s",
+                t.getId(), t.getTitle(), t.getPriority(), col.name());
+    }
+
 
     public static void main(String[] args) {
         Board board = new Board();
@@ -121,7 +127,9 @@ public class Main {
                     }
 
                     List<Task> listSelection = board.get(listColumn);
-                    board.getTasks(listSelection);
+                    for(Task t : listSelection) {
+                        System.out.println(formatTaskLine(t, listColumn));
+                    }
                     break;
                 case "find":
                     String findPrompt = "Enter the id of the task you want to find: ";
@@ -129,14 +137,13 @@ public class Main {
                     long findTaskId = readLongOrFail(scanner, findPrompt);
 
                     Task foundTask = board.find(findTaskId);
-                    String foundTaskCol = board.getColName(findTaskId);
+                    Column foundTaskCol = board.getCol(findTaskId);
 
                     if (foundTask == null) {
                         System.out.println("Task not found");
                         break;
                     } else {
-                        System.out.println("Task found in " + foundTaskCol);
-                        System.out.println(foundTask);
+                        System.out.println(formatTaskLine(foundTask, foundTaskCol));
                     }
                     break;
                 case "move":
