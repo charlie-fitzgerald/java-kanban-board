@@ -52,7 +52,7 @@ public class Main {
                     return "q";
                 }
             }
-            System.out.println("Enter y or n, or q to quit");
+            System.out.println("Enter y or n | q to quit");
         }
     }
 
