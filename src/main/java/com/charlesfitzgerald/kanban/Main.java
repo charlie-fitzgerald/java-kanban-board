@@ -180,6 +180,7 @@ public class Main {
                 case "edit": {
                     long editId = readLongOrFail(scanner, "Enter id of task to edit: ");
                     Task editTask = board.find(editId);
+                    Column editTaskCol = board.getCol(editId);
                     if (editTask == null) {
                         System.out.println("Task not found");
                         break;
@@ -232,7 +233,7 @@ public class Main {
                     board.edit(editTask, newTitle, newDescription, newPriority);
 
                     System.out.println("Task edited successfully");
-                    System.out.println("Edited task: " + editTask);
+                    System.out.println("Edited task: " + formatTaskLine(editTask, editTaskCol));
                     boolean editSave = board.save();
                     if (editSave) {
                         System.out.printf("Board saved successfully to %s%n", board.getSaveFilePath());
