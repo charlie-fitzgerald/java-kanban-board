@@ -2,14 +2,14 @@
   "todo": [
     {
       "id": 1,
-      "title": "Task 2",
+      "title": "New Title",
       "description": "It\u0027s task 2",
       "priority": 1
     },
     {
       "id": 2,
-      "title": "task3",
-      "description": "task3",
+      "title": "Task 3",
+      "description": "Task 3",
       "priority": 1
     },
     {
@@ -29,16 +29,15 @@
       "title": "Time management",
       "description": "Or Something",
       "priority": 2
-    }
-  ],
-  "doing": [
+    },
     {
-      "id": 0,
-      "title": "task1",
-      "description": "task1",
+      "id": 7,
+      "title": "Another new task",
+      "description": "It\u0027s here, it\u0027s near, it\u0027s a frickin task BABY",
       "priority": 1
     }
   ],
+  "doing": [],
   "done": [
     {
       "id": 3,

@@ -22,18 +22,6 @@ public class Main {
 
     }
 
-    public static int readIntOrFail(@NotNull Scanner scanner, String prompt) {
-        while (true) {
-        System.out.println(prompt);
-        String input = scanner.nextLine().trim();
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("Enter a valid number");
-            }
-        }
-    }
-
     public static long readLongOrFail(@NotNull Scanner scanner, String prompt) {
         while(true) {
             System.out.println(prompt);
@@ -46,6 +34,44 @@ public class Main {
             }
         }
     }
+
+    // Normalizes to "y", "n", or "q"; keeps prompting until valid.
+    static String askYesNoQuit(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            System.out.print("> ");
+            String a = scanner.nextLine().trim().toLowerCase();
+            switch (a) {
+                case "y", "yes" -> {
+                    return "y";
+                }
+                case "n", "no" -> {
+                    return "n";
+                }
+                case "q", "quit" -> {
+                    return "q";
+                }
+            }
+            System.out.println("Enter y or n, or q to quit");
+        }
+    }
+
+    // Reads a priority in [1..3]; keeps prompting until valid.
+    static int readPriority1to3(Scanner scanner) {
+        while (true) {
+            System.out.println("Enter new priority (1–3):");
+            System.out.print("> ");
+            String s = scanner.nextLine().trim();
+            try {
+                int v = Integer.parseInt(s);
+                if (v >= 1 && v <= 3) return v;
+                System.out.println("Invalid priority: must be 1, 2, or 3.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input: enter a number (1–3).");
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         Board board = new Board();
@@ -74,23 +100,7 @@ public class Main {
                     System.out.print("> ");
                     String description = scanner.nextLine();
 
-                    int priority; // will be set by the loop
-                    while (true) {
-                        System.out.println("Enter priority of task as a value between 1-3:");
-                        System.out.print("> ");
-                        String line = scanner.nextLine().trim();
-                        try {
-                            int parsed = Integer.parseInt(line);
-                            if (parsed < 1 || parsed > 3) {
-                                System.out.println("Invalid priority: must be 1, 2, or 3.");
-                                continue;
-                            }
-                            priority = parsed; // valid
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input: enter a number (1–3).");
-                        }
-                    }
+                    int priority = readPriority1to3(scanner);
 
                     Task newTask = new Task(board.nextId(), title, description, priority);
 
@@ -160,91 +170,71 @@ public class Main {
                         System.out.println("Task not found");
                     }
                     break;
-                case "edit":
-                    String editPrompt = "Enter id of task to edit: ";
-                    long editId = readLongOrFail(scanner, editPrompt);
+                case "edit": {
+                    long editId = readLongOrFail(scanner, "Enter id of task to edit: ");
                     Task editTask = board.find(editId);
-
                     if (editTask == null) {
                         System.out.println("Task not found");
                         break;
                     }
 
-                    String newTitle;
-                    String newDescription;
-                    int newPriority;
-                    boolean editTitle = true;
-                    boolean editDescription = true;
-                    boolean editPriority = true;
+                    // Preload current values; overwrite only if user chooses to edit
+                    String newTitle = editTask.getTitle();
+                    String newDescription = editTask.getDescription();
+                    int newPriority = editTask.getPriority();
 
-                    while (true){
-                        System.out.println("Current title: " + editTask.getTitle());
-                        System.out.println("Edit title? (y or n)");
+                    // ---- Title ----
+                    System.out.println("Current title: " + editTask.getTitle());
+                    String tAns = askYesNoQuit(scanner, "Edit title? (y/n | q to quit)");
+                    if (tAns.equals("q")) { System.out.println("Edit ABORTED"); break; }
+                    if (tAns.equals("y")) {
+                        System.out.println("Enter new title:");
                         System.out.print("> ");
-                        String editTitleQuery = scanner.nextLine().trim().toLowerCase();
-
-                        if (editTitleQuery.equals("y")) {
-                            System.out.println("Enter new title: ");
-                            System.out.print("> ");
-                            newTitle = scanner.nextLine();
-                            break;
-                        } else if (editTitleQuery.equals("n")) {
-                            System.out.println("Title not changed");
-                            newTitle = editTask.getTitle();
-                            editTitle = false;
-                            break;
-                        } else {
-                            System.out.println("Enter y or n");
-                        }
-                    }
-                    while (true){
-                        System.out.println("Current description: " + editTask.getDescription());
-                        System.out.println("Edit Description? (y or n)");
-                        String editDescriptionQuery = scanner.nextLine().trim().toLowerCase();
-
-                        if (editDescriptionQuery.equals("y")) {
-                            System.out.println("Enter new description: ");
-                            System.out.print("> ");
-                            newDescription = scanner.nextLine();
-                            break;
-                        } else if (editDescriptionQuery.equals("n")) {
-                            System.out.println("Description not changed");
-                            newDescription = editTask.getDescription();
-                            editDescription = false;
-                            break;
-                        } else {
-                            System.out.println("Enter y or n");
-                        }
-                    }
-                    while (true){
-                        System.out.println("Current priority: " + editTask.getPriority());
-                        System.out.println("Edit Priority? (y or n)");
-                        String editPriorityQuery = scanner.nextLine().trim().toLowerCase();
-
-                        if (editPriorityQuery.equals("y")) {
-                            System.out.println("Enter new priority");
-                            System.out.print("> ");
-                            newPriority = Integer.parseInt(scanner.nextLine());
-                            break;
-                        } else if (editPriorityQuery.equals("n")) {
-                            newPriority = editTask.getPriority();
-                            editPriority= false;
-                            break;
-                        } else {
-                            System.out.println("Enter y or n");
-                        }
+                        newTitle = scanner.nextLine();
                     }
 
-                    if (!editTitle && !editDescription && !editPriority) {
+                    // ---- Description ----
+                    System.out.println("Current description: " + editTask.getDescription());
+                    String dAns = askYesNoQuit(scanner, "Edit description? (y/n | q to quit)");
+                    if (dAns.equals("q")) { System.out.println("Edit ABORTED"); break; }
+                    if (dAns.equals("y")) {
+                        System.out.println("Enter new description:");
+                        System.out.print("> ");
+                        newDescription = scanner.nextLine();
+                    }
+
+                    // ---- Priority ----
+                    System.out.println("Current priority: " + editTask.getPriority());
+                    String pAns = askYesNoQuit(scanner, "Edit priority? (y/n | q to quit)");
+                    if (pAns.equals("q")) { System.out.println("Edit ABORTED"); break; }
+                    if (pAns.equals("y")) {
+                        newPriority = readPriority1to3(scanner);
+                    }
+
+                    // No-op detection
+                    boolean changed =
+                            !newTitle.equals(editTask.getTitle()) ||
+                            !newDescription.equals(editTask.getDescription()) ||
+                            newPriority != editTask.getPriority();
+
+                    if (!changed) {
                         System.out.println("Task not edited");
                         break;
                     }
 
                     board.edit(editTask, newTitle, newDescription, newPriority);
+
                     System.out.println("Task edited successfully");
                     System.out.println("Edited task: " + editTask);
-
+                    boolean editSave = board.save();
+                    if (editSave) {
+                        System.out.printf("Board saved successfully to %s%n", board.getSaveFilePath());
+                    } else {
+                        System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
+                    }
                     break;
+                }
+
                 case "del":
                     String delPrompt = "Enter id of task to delete: ";
                     System.out.print("> ");
