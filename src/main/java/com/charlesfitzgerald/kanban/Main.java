@@ -1,6 +1,7 @@
 package com.charlesfitzgerald.kanban;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -78,7 +79,6 @@ public class Main {
                 t.getId(), t.getTitle(), t.getPriority(), col.name());
     }
 
-
     public static void main(String[] args) {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
@@ -116,20 +116,50 @@ public class Main {
                     break;
 
                 case "list":
-                    System.out.println("Select list: todo, doing, done");
+                    System.out.println("Select list: todo, doing, done (optional sorting flags available)");
                     System.out.print("> ");
                     String userListSelection = scanner.nextLine();
-                    Column listColumn = parseColumn(userListSelection);
+                    String[] userListSelectionParts = userListSelection.split("\\s+");
+                    System.out.println(Arrays.toString(userListSelectionParts));
+                    Column listColumn = parseColumn(userListSelectionParts[0]);
 
                     if (listColumn == null) {
                         System.out.println("List not found");
                         break;
                     }
 
+
+
+                    System.out.println(listColumn.name());
+
                     List<Task> listSelection = board.get(listColumn);
-                    for(Task t : listSelection) {
-                        System.out.println(formatTaskLine(t, listColumn));
+
+                    if (userListSelectionParts.length < 2) {
+                        for(Task t : listSelection) {
+                            System.out.println(formatTaskLine(t, listColumn));
+                        }
+
+                        break;
                     }
+
+                    boolean sorted;
+                    if (userListSelectionParts[1].equalsIgnoreCase("--by")) {
+                        String sortType = userListSelectionParts[2].trim().toLowerCase();
+
+                        sorted = board.listSorter(listSelection, sortType);
+                    } else {
+                        System.out.println("Invalid sort flag");
+                        break;
+                    }
+
+                    if (sorted) {
+                        for(Task t : listSelection) {
+                            System.out.println(formatTaskLine(t, listColumn));
+                        }
+                    } else {
+                        System.out.println("Sort failed");
+                    }
+
                     break;
                 case "find":
                     String findPrompt = "Enter the id of the task you want to find: ";

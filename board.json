@@ -1,6 +1,12 @@
 {
   "todo": [
     {
+      "id": 7,
+      "title": "Another new task",
+      "description": "It\u0027s here, it\u0027s near, it\u0027s a frickin task BABY",
+      "priority": 1
+    },
+    {
       "id": 1,
       "title": "New Title",
       "description": "It\u0027s task 2",
@@ -13,9 +19,9 @@
       "priority": 1
     },
     {
-      "id": 4,
-      "title": "new task",
-      "description": "it\u0027s a new task! Sparkly clean!",
+      "id": 6,
+      "title": "Time management",
+      "description": "Time management task",
       "priority": 2
     },
     {
@@ -25,16 +31,10 @@
       "priority": 1
     },
     {
-      "id": 6,
-      "title": "Time management",
-      "description": "Time management task",
+      "id": 4,
+      "title": "new task",
+      "description": "it\u0027s a new task! Sparkly clean!",
       "priority": 2
-    },
-    {
-      "id": 7,
-      "title": "Another new task",
-      "description": "It\u0027s here, it\u0027s near, it\u0027s a frickin task BABY",
-      "priority": 1
     }
   ],
   "doing": [],
