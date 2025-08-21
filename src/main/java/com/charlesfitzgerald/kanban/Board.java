@@ -147,28 +147,6 @@ public class Board {
         done.addAll(data.getDone());
     }
 
-    public boolean listSorter(List<Task> listSelection, String sortType) {
-
-        return switch (sortType) {
-            case "i", "id" -> {
-                listSelection.sort(Comparator.comparing(Task::getId));
-                yield true;
-            }
-            case "t", "title" -> {
-                listSelection.sort(Comparator.comparing(Task::getTitle));
-                yield true;
-            }
-            case "p", "prio", "priority" -> {
-                listSelection.sort(Comparator.comparing(Task::getPriority));
-                yield true;
-            }
-            default -> {
-                System.out.println("Sort type invalid.");
-                yield false;
-            }
-        };
-    }
-
     public boolean save() {
         SaveData data = toSaveData();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

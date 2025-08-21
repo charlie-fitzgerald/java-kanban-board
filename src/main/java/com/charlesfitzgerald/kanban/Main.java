@@ -2,6 +2,7 @@ package com.charlesfitzgerald.kanban;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -120,7 +121,6 @@ public class Main {
                     System.out.print("> ");
                     String userListSelection = scanner.nextLine();
                     String[] userListSelectionParts = userListSelection.split("\\s+");
-                    System.out.println(Arrays.toString(userListSelectionParts));
                     Column listColumn = parseColumn(userListSelectionParts[0]);
 
                     if (listColumn == null) {
@@ -128,38 +128,61 @@ public class Main {
                         break;
                     }
 
-
-
-                    System.out.println(listColumn.name());
-
                     List<Task> listSelection = board.get(listColumn);
+                    Comparator<Task> cmp;
+                    boolean isDescending = false;
 
                     if (userListSelectionParts.length < 2) {
-                        for(Task t : listSelection) {
-                            System.out.println(formatTaskLine(t, listColumn));
-                        }
-
+                        TaskViews.printList(listSelection, listColumn);
                         break;
                     }
 
-                    boolean sorted;
+                    if (userListSelectionParts.length < 3) {
+                        System.out.println("Usage: list <col> [--by id|title|priority] [--desc]");
+                        System.out.println("You forgot to add a sort type");
+                        TaskViews.printList(listSelection, listColumn);
+                    }
+
+                    if (userListSelectionParts.length > 4) {
+                        System.out.println("You typed too much stuff");
+                        System.out.println("Usage: list <col> [--by id|title|priority] [--desc]");
+                    }
+
                     if (userListSelectionParts[1].equalsIgnoreCase("--by")) {
                         String sortType = userListSelectionParts[2].trim().toLowerCase();
+                        String descendingFlag = userListSelectionParts[3];
+                        if (descendingFlag.equals("--desc") || descendingFlag.equals("--descending")) {
+                            isDescending = true;
+                        }
 
-                        sorted = board.listSorter(listSelection, sortType);
+                        switch (sortType) {
+                            case "i", "id" -> {
+                                cmp = TaskViews.byId();
+                                if (isDescending) {
+                                    cmp = cmp.reversed();
+                                }
+                                TaskViews.printListSorted(listSelection, listColumn, cmp);
+                            }
+                            case "t", "title" -> {
+                                cmp = TaskViews.byTitle();
+                                if (isDescending) {
+                                    cmp = cmp.reversed();
+                                }
+                                TaskViews.printListSorted(listSelection, listColumn, cmp);
+                            }
+                            case "p", "prio", "priority" -> {
+                                cmp = TaskViews.byPriority();
+                                if (isDescending) {
+                                    cmp = cmp.reversed();
+                                }
+                                TaskViews.printListSorted(listSelection, listColumn, cmp);
+                            }
+                            default -> System.out.println("How did you get here");
+                        }
                     } else {
                         System.out.println("Invalid sort flag");
                         break;
                     }
-
-                    if (sorted) {
-                        for(Task t : listSelection) {
-                            System.out.println(formatTaskLine(t, listColumn));
-                        }
-                    } else {
-                        System.out.println("Sort failed");
-                    }
-
                     break;
                 case "find":
                     String findPrompt = "Enter the id of the task you want to find: ";
