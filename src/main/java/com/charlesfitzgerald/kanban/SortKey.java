@@ -3,7 +3,20 @@ package com.charlesfitzgerald.kanban;
 import java.util.Comparator;
 
 public enum SortKey {
-    ID, TITLE, PRIORITY;
+    ID,
+    TITLE,
+    PRIORITY;
+
+    public SortKey fromFlag(String userInput) {
+        userInput = userInput.trim().toLowerCase();
+
+        return switch (userInput) {
+            case "i", "id" -> ID;
+            case "p", "prio", "priority" -> PRIORITY;
+            case "t", "title" -> TITLE;
+            default -> null;
+        };
+    }
 
     public Comparator<Task> comparator() {
         return switch (this) {

@@ -3,11 +3,15 @@ package com.charlesfitzgerald.kanban;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.charlesfitzgerald.kanban.Main.formatTaskLine;
 import static java.util.Comparator.*;
 
 public class TaskViews {
     public TaskViews() {}
+
+    public static String formatTaskLine(Task t, Column col) {
+        return String.format("[#%d] %s (prio %d) in %s",
+                t.getId(), t.getTitle(), t.getPriority(), col.name());
+    }
 
     public static void printList(List<Task> taskList, Column col) {
             for (Task t : taskList) {

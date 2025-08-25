@@ -1,7 +1,6 @@
 package com.charlesfitzgerald.kanban;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -61,7 +60,7 @@ public class Main {
     // Reads a priority in [1..3]; keeps prompting until valid.
     static int readPriority1to3(Scanner scanner) {
         while (true) {
-            System.out.println("Enter new priority (1–3):");
+            System.out.println("Enter priority (1-3):");
             System.out.print("> ");
             String s = scanner.nextLine().trim();
             try {
@@ -69,15 +68,9 @@ public class Main {
                 if (v >= 1 && v <= 3) return v;
                 System.out.println("Invalid priority: must be 1, 2, or 3.");
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input: enter a number (1–3).");
+                System.out.println("Invalid input: enter a number (1-3).");
             }
         }
-    }
-
-    // returns formatted task String
-    static String formatTaskLine(Task t, Column col) {
-        return String.format("[#%d] %s (prio %d) in %s",
-                t.getId(), t.getTitle(), t.getPriority(), col.name());
     }
 
     public static void main(String[] args) {
@@ -196,7 +189,7 @@ public class Main {
                         System.out.println("Task not found");
                         break;
                     } else {
-                        System.out.println(formatTaskLine(foundTask, foundTaskCol));
+                        System.out.println(TaskViews.formatTaskLine(foundTask, foundTaskCol));
                     }
                     break;
                 case "move":
@@ -286,7 +279,7 @@ public class Main {
                     board.edit(editTask, newTitle, newDescription, newPriority);
 
                     System.out.println("Task edited successfully");
-                    System.out.println("Edited task: " + formatTaskLine(editTask, editTaskCol));
+                    System.out.println("Edited task: " + TaskViews.formatTaskLine(editTask, editTaskCol));
                     boolean editSave = board.save();
                     if (editSave) {
                         System.out.printf("Board saved successfully to %s%n", board.getSaveFilePath());
