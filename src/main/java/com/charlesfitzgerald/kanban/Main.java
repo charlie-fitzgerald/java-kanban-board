@@ -186,35 +186,78 @@ public class Main {
                     }
                     break;
                 case "move":
-                    String movePrompt = "Enter the id of task you want to move: ";
-                    System.out.print("> ");
+                    boolean exitMove = false;
+                    while(true) {
+                        String movePrompt = "Enter the id of task you want to move: ";
+                        long moveTaskId = readLongOrFail(scanner, movePrompt);
 
-                    long moveTaskId = readLongOrFail(scanner, movePrompt);
+                        Task moveTask = board.find(moveTaskId);
+                        Column fromList = board.getCol(moveTaskId);
 
-                    Task moveTask = board.find(moveTaskId);
+                        if (moveTask == null) {
+                            System.out.println("Task not found");
+                            continue;
+                        }
 
-                    if (moveTask == null) {
-                        System.out.println("Task not found");
-                        break;
+                        // confirmation before moving task
+                        System.out.println("You have selected this task to move: ");
+                        System.out.println(TaskViews.formatTaskLine(moveTask, fromList));
+
+                        System.out.println("Please confirm that this is the correct task");
+                        String moveTaskConfirm = askYesNoQuit(scanner, "Confirm task? (y or n | q to quit)");
+                        if (moveTaskConfirm.equals("q")) {
+                            System.out.println("Move task aborted");
+                            break;
+                        }
+
+                        if (moveTaskConfirm.equals("n")) {
+                            System.out.println("Please select a different task");
+                            continue;
+                        }
+
+                        System.out.println("Enter which list you want to move the task to: todo, doing, done");
+                        String moveInput = scanner.nextLine();
+
+                        Column toList = parseColumn(moveInput);
+
+                        if (toList == null) {
+                            System.out.println("Enter a valid list");
+                            continue;
+                        }
+
+                        if (fromList == toList) {
+                            System.out.print("The task is already in that list. Please select a different list.");
+                            continue;
+                        }
+
+                        System.out.println("Moving task from " + board.getCol(moveTaskId) + ", to " + toList.name());
+
+                        String userConfirmation = askYesNoQuit(scanner, "Confirm move? (y or n | q to quit)");
+                        switch (userConfirmation) {
+                            case "q":
+                                System.out.println("Move aborted");
+                                exitMove = true;
+                                break;
+                            case "y":
+                                boolean taskMoved = board.move(moveTaskId, toList);
+
+                                if (taskMoved) {
+                                    System.out.println("Task moved successfully");
+                                } else {
+                                    System.out.println("Task move failed");
+                                }
+                                exitMove = true;
+                                break;
+                            case "n":
+                                System.out.println("Select a different task to move");
+                        }
+
+                        if(exitMove) {
+                            break;
+                        }
+
                     }
 
-                    System.out.println("Enter which list you want to move the task to: todo, doing, done");
-                    String moveInput = scanner.nextLine();
-
-                    Column toList = parseColumn(moveInput);
-
-                    if (toList == null) {
-                        System.out.println("Enter a valid list");
-                        break;
-                    }
-
-                    boolean taskMoved = board.move(moveTaskId, toList);
-
-                    if (taskMoved) {
-                        System.out.println("Task moved successfully");
-                    } else {
-                        System.out.println("Task not found");
-                    }
                     break;
                 case "edit": {
                     long editId = readLongOrFail(scanner, "Enter id of task to edit: ");
@@ -339,6 +382,7 @@ public class Main {
                     }
                     System.out.println("Thanks for using this program!");
 
+                    scanner.close();
                     return;
                 default:
                     System.out.println("Pick a valid option");

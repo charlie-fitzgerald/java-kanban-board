@@ -7,12 +7,6 @@
       "priority": 1
     },
     {
-      "id": 1,
-      "title": "New Title",
-      "description": "It\u0027s task 2",
-      "priority": 1
-    },
-    {
       "id": 2,
       "title": "Task 3",
       "description": "Task 3",
@@ -29,6 +23,14 @@
       "title": "new task",
       "description": "it\u0027s a test task, a task to test",
       "priority": 1
+    }
+  ],
+  "doing": [
+    {
+      "id": 1,
+      "title": "New Title",
+      "description": "It\u0027s task 2",
+      "priority": 1
     },
     {
       "id": 4,
@@ -37,7 +39,6 @@
       "priority": 2
     }
   ],
-  "doing": [],
   "done": [
     {
       "id": 3,
