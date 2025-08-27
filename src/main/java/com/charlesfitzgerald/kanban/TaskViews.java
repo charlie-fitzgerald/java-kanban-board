@@ -13,6 +13,18 @@ public class TaskViews {
                 t.getId(), t.getTitle(), t.getPriority(), col.name());
     }
 
+    public static String printDetailedTask(Task t, Column col) {
+        return String.format("""
+                        <<TASK DETAILS>>
+                        TASK ID: #%d
+                        TITLE: %s
+                        DESCRIPTION: %s
+                        PRIORITY: %d
+                        COLUMN: %s
+                        """,
+                t.getId(), t.getTitle(), t.getDescription(), t.getPriority(), col.name());
+    }
+
     public static void printList(List<Task> taskList, Column col) {
             for (Task t : taskList) {
                 System.out.println(formatTaskLine(t, col));

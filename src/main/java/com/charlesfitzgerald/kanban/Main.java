@@ -36,6 +36,15 @@ public class Main {
         }
     }
 
+    static long tryParseLong(String inputString) {
+        try {
+            return Long.parseLong(inputString);
+        } catch (NumberFormatException e) {
+            System.out.println("Enter a valid number");
+        }
+        return -1;
+    }
+
     // Normalizes to "y", "n", or "q"; keeps prompting until valid.
     static String askYesNoQuit(Scanner scanner, String prompt) {
         while (true) {
@@ -94,7 +103,7 @@ public class Main {
         boolean loadOnStartUp = board.load();
 
         if (loadOnStartUp) {
-            System.out.printf("Board successfully loaded from %s%n", board.getSaveFilePath());
+            System.out.printf("Board '" + board.getBoardName() + "' successfully loaded from %s%n", board.getSaveFilePath());
         }
 
         while(true) {
@@ -187,9 +196,31 @@ public class Main {
                     }
                     break;
                 case "find":
-                    String findPrompt = "Enter the id of the task you want to find: ";
-                    System.out.print("> ");
-                    long findTaskId = readLongOrFail(scanner, findPrompt);
+                    System.out.println("Enter: <id> [--detailed|--v] (q to quit)");
+                    String findInput = scanner.nextLine().trim().toLowerCase();
+
+                    if (findInput.equals("q")) {
+                        System.out.println("Returning to main menu");
+                        break;
+                    }
+
+                    String[] findInputParts = findInput.split("\\s+");
+                    boolean isDetailed = false;
+                    for (int i = 1; i < findInputParts.length; i++) {
+                        String f = findInputParts[i];
+                        if (f.equals("--detailed") || f.equals("--v")) {
+                            isDetailed = true;
+                        } else {
+                            System.out.println("Ignoring unknown flag " + f);
+                        }
+                    }
+
+                    long findTaskId = tryParseLong(findInputParts[0]);
+
+                    if (findTaskId == -1) {
+                        System.out.println("Invalid id");
+                        break;
+                    }
 
                     Task foundTask = board.find(findTaskId);
                     Column foundTaskCol = board.getCol(findTaskId);
@@ -198,7 +229,9 @@ public class Main {
                         System.out.println("Task not found");
                         break;
                     } else {
-                        System.out.println(TaskViews.formatTaskLine(foundTask, foundTaskCol));
+                       String findOutput = isDetailed ? TaskViews.printDetailedTask(foundTask, foundTaskCol) :
+                                                        TaskViews.formatTaskLine(foundTask, foundTaskCol);
+                       System.out.println(findOutput);
                     }
                     break;
                 case "move":
@@ -429,9 +462,25 @@ public class Main {
                                 System.out.println("  list done --by p --d");
                                 System.out.println();
                                 break;
+                            case "find":
+                                System.out.println("Usage: find <id> [--detailed|--v]");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  After entering 'find' at the main menu, you will be prompted to enter");
+                                System.out.println("  the task ID, with an optional flag to show detailed information.");
+                                System.out.println();
+                                System.out.println("Options:");
+                                System.out.println("  --detailed, --v   Show full task details (title, description, priority, column)");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  3");
+                                System.out.println("  12 --detailed");
+                                System.out.println("  7 --v");
+                                System.out.println();
+                                break;
                             default:
                                 printHelpCommands();
-                                System.out.println("No detailed help for " + helpInput + " currently. Try 'list' or 'q' to quit.");
+                                System.out.println("No detailed help for " + helpInput + " currently. Try 'list', 'find', or 'q' to quit.");
                                 break;
                         }
 
