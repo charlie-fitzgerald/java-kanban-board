@@ -11,6 +11,7 @@ public class Board {
     private final ArrayList<Task> doing;
     private final ArrayList<Task> done;
     private long nextId;
+    private String boardName;
     private static final String SAVE_FILE = "board.json";
 
     // Default constructor (starts empty)
@@ -24,6 +25,7 @@ public class Board {
         this.doing = new ArrayList<>(doing);
         this.done = new ArrayList<>(done);
         this.nextId = 0;
+        this.boardName = "Default Board";
     }
 
     // enum version of listing
@@ -110,8 +112,9 @@ public class Board {
         List<Task> todoCopy = getTodo();
         List<Task> doingCopy = getDoing();
         List<Task> doneCopy = getDone();
+        String boardName = getBoardName();
 
-        return new SaveData(todoCopy, doingCopy, doneCopy);
+        return new SaveData(todoCopy, doingCopy, doneCopy, boardName);
     }
 
     public void loadFrom(SaveData data) {
@@ -196,6 +199,14 @@ public class Board {
 
     public String getSaveFilePath() {
         return SAVE_FILE;
+    }
+
+    public String getBoardName() {
+        return boardName;
+    }
+
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
 

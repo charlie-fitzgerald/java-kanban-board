@@ -7,18 +7,22 @@ public class SaveData {
     private final ArrayList<Task> todo;
     private final ArrayList<Task> doing;
     private final ArrayList<Task> done;
+    private final String boardName;
 
     // Default constructor (starts empty)
-    public SaveData() {
-        this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    public SaveData(String boardName) {
+        this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), boardName);
     }
 
     // Constructor that accepts starting tasks
-    public SaveData(List<Task> todo, List<Task> doing, List<Task> done) {
+    public SaveData(List<Task> todo, List<Task> doing, List<Task> done, String boardName) {
         this.todo = new ArrayList<>(todo);
         this.doing = new ArrayList<>(doing);
         this.done = new ArrayList<>(done);
+        this.boardName = boardName;
     }
+
+
 
     public List<Task> getTodo() {
         return todo;
@@ -31,6 +35,8 @@ public class SaveData {
     public List<Task> getDone() {
         return done;
     }
+
+    public String getBoardName() { return boardName;}
 
 
 }

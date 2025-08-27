@@ -108,7 +108,7 @@ public class Main {
 
                     System.out.println("New task added successfully!");
                     System.out.println("Your new task is: ");
-                    System.out.println(newTask);
+                    System.out.println(TaskViews.formatTaskLine(newTask, board.getCol(newTask.getId())));
                     break;
 
                 case "list":
@@ -335,7 +335,6 @@ public class Main {
                         Column delTaskCol = board.getCol(delId);
 
                         List<Task> delTaskList = board.get(delTaskCol);
-                        int taskCount = delTaskList.size();
 
                         if (delTask == null) {
                             System.out.println("Task not found. Select a valid task");
@@ -357,6 +356,7 @@ public class Main {
                                 boolean result = board.remove(delId);
 
                                 if (result) {
+                                    int taskCount = delTaskList.size();
                                     exitDel = true;
                                     System.out.println("Task removed successfully");
                                     System.out.println(delTaskCol.name() + " currently has " + taskCount + " tasks.");
@@ -374,7 +374,7 @@ public class Main {
                 case "save":
                     boolean save = board.save();
                     if (save) {
-                        System.out.printf("Board successfully saved to %s%n", board.getSaveFilePath());
+                        System.out.printf("Board '" + board.getBoardName() + "' successfully saved to %s%n", board.getSaveFilePath());
                     } else {
                         System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
                     }
@@ -383,7 +383,7 @@ public class Main {
                     boolean load = board.load();
 
                     if (load) {
-                        System.out.printf("Data successfully loaded from %s%n", board.getSaveFilePath());
+                        System.out.printf("Board '" + board.getBoardName() + "' data successfully loaded from %s%n", board.getSaveFilePath());
                     } else {
                         System.out.printf("Loading data from %s%n failed", board.getSaveFilePath());
                     }
@@ -409,7 +409,7 @@ public class Main {
                     boolean quitSave = board.save();
 
                     if (quitSave) {
-                        System.out.printf("Board successfully saved to %s%n", board.getSaveFilePath());
+                        System.out.printf("Board '"+board.getBoardName()+"' successfully saved to %s%n", board.getSaveFilePath());
                     } else {
                         System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
                     }
