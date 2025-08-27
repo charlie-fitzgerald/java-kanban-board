@@ -7,16 +7,16 @@
       "priority": 2
     },
     {
-      "id": 3,
-      "title": "D task",
-      "description": "It\u0027s a task with a D in its name",
-      "priority": 2
-    },
-    {
       "id": 4,
       "title": "M task",
       "description": "It\u0027s a task with an M in its name",
       "priority": 1
+    },
+    {
+      "id": 5,
+      "title": "q",
+      "description": "q",
+      "priority": 2
     }
   ],
   "doing": [
@@ -32,6 +32,12 @@
       "id": 2,
       "title": "Task 3",
       "description": "It\u0027s the third task",
+      "priority": 2
+    },
+    {
+      "id": 3,
+      "title": "D task",
+      "description": "It\u0027s a task with a D in its name",
       "priority": 2
     }
   ],

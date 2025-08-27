@@ -135,10 +135,73 @@ public class Main {
                     break;
 
                 case "list":
-                    System.out.println("Select list: todo, doing, done (optional sorting flags available)");
+                    System.out.println("Select list: todo, doing, done, or type 'all' to print all lists");
+                    System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
                     System.out.print("> ");
                     String userListSelection = scanner.nextLine();
                     String[] userListSelectionParts = userListSelection.split("\\s+");
+                    Comparator<Task> cmp;
+                    boolean isDescending = false;
+
+                    // Handling printing all lists at once
+                    if (userListSelectionParts[0].isEmpty()) {
+                        System.out.println("Please provide input for this command");
+                        break;
+                    }
+
+                    if (userListSelectionParts[0].trim().equalsIgnoreCase("all")) {
+
+                        if (userListSelectionParts.length < 2) {
+                            TaskViews.printAll(board);
+                            break;
+                        }
+
+                        if (userListSelectionParts.length < 3) {
+                            System.out.println("Something went wrong with your query");
+                            System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
+                            TaskViews.printAll(board);
+                            break;
+                        }
+
+                        if (userListSelectionParts.length > 4) {
+                            System.out.println("You typed too much stuff");
+                            System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
+                            break;
+                        }
+
+                        if (userListSelectionParts[1].equalsIgnoreCase("--by")) {
+                            String sortType = userListSelectionParts[2].trim().toLowerCase();
+                            SortKey key = SortKey.fromFlag(sortType);
+
+                            if (key == null) {
+                                System.out.println("Invalid sort type. Please enter a valid sort type");
+                                break;
+                            }
+
+                            // loop through the rest of the user input for a descending flag
+                            for (int i = 3; i < userListSelectionParts.length; i++) {
+                                String token = userListSelectionParts[i];
+                                if ("--d".equalsIgnoreCase(token) || "--desc".equalsIgnoreCase(token) || "--descending".equalsIgnoreCase(token)) {
+                                    isDescending = true;
+                                    break;
+                                } else {
+                                    System.out.println("Ignoring unknown flag " + token);
+                                }
+                            }
+
+                            cmp = key.comparator(isDescending);
+
+                            TaskViews.printAllSorted(board, cmp);
+                        } else {
+                            System.out.println("Invalid input after list selection");
+                            System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
+                            TaskViews.printAll(board);
+                        }
+
+                        break;
+                    }
+
+
                     Column listColumn = parseColumn(userListSelectionParts[0]);
 
                     if (listColumn == null) {
@@ -147,8 +210,6 @@ public class Main {
                     }
 
                     List<Task> listSelection = board.get(listColumn);
-                    Comparator<Task> cmp;
-                    boolean isDescending = false;
 
                     if (userListSelectionParts.length < 2) {
                         TaskViews.printList(listSelection, listColumn);
@@ -157,14 +218,13 @@ public class Main {
 
                     if (userListSelectionParts.length < 3) {
                         System.out.println("Something went wrong with your query");
-                        System.out.println("Usage: list <col> [--by id|title|priority] [--desc]");
-                        TaskViews.printList(listSelection, listColumn);
+                        System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
                         break;
                     }
 
                     if (userListSelectionParts.length > 4) {
                         System.out.println("You typed too much stuff");
-                        System.out.println("Usage: list <col> [--by id|title|priority] [--desc]");
+                        System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
                         break;
                     }
 
@@ -191,12 +251,13 @@ public class Main {
                         TaskViews.printListSorted(listSelection, listColumn, cmp);
                     } else {
                         System.out.println("Invalid input after list selection");
-                        System.out.println("Usage: list <col> [--by id|title|priority] [--desc]");
+                        System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
                         TaskViews.printList(listSelection, listColumn);
                     }
                     break;
                 case "find":
                     System.out.println("Enter: <id> [--detailed|--v] (q to quit)");
+                    System.out.print("> ");
                     String findInput = scanner.nextLine().trim().toLowerCase();
 
                     if (findInput.equals("q")) {
@@ -392,6 +453,7 @@ public class Main {
                         System.out.println("You have selected this task to delete: ");
                         System.out.println(TaskViews.formatTaskLine(delTask, delTaskCol));
 
+                        // Normalizes user input to y/n/q. Continues prompting until valid input detected
                         String delConfirmResponse = askYesNoQuit(scanner, "Are you sure you want to delete this task? (y or n | q to quit)");
 
                         switch (delConfirmResponse) {
@@ -441,13 +503,21 @@ public class Main {
 
                     boolean inHelpFlow = true;
                     while (inHelpFlow) {
-                        System.out.println("Type a command from the list to get more details on that specific command. Type 'q' to quit to main menu (quit will return help for the 'quit' command)");
+                        System.out.println("""
+                        Type a command from the list to get more details on that specific command.
+                        Type 'commands' to print the list of commands again.
+                        Type 'q' to quit to main menu ('quit' will return help for the 'quit' command)
+                        """);
+                        System.out.print("> ");
                         String helpInput = scanner.nextLine().toLowerCase().trim();
 
                         switch (helpInput) {
                             case "q":
                                 System.out.println("Returning to main menu");
                                 inHelpFlow = false;
+                                break;
+                            case "commands":
+                                printHelpCommands();
                                 break;
                             case "add":
                                 System.out.println("Usage: add");
@@ -461,7 +531,7 @@ public class Main {
                                 System.out.println();
                                 break;
                             case "list":
-                                System.out.println("Usage: list <todo|doing|done> [--by <id|i|title|t|priority|p|prio>] [--desc|--d]");
+                                System.out.println("Usage: list <todo|doing|done|all> [--by id|title|priority] [--desc]");
                                 System.out.println();
                                 System.out.println("Options:");
                                 System.out.println("  --by <key>   Sort by id/title/priority (aliases supported)");
@@ -471,6 +541,8 @@ public class Main {
                                 System.out.println("  list todo");
                                 System.out.println("  list doing --by title");
                                 System.out.println("  list done --by p --d");
+                                System.out.println("  list all");
+                                System.out.println("  list all --by priority --desc");
                                 System.out.println();
                                 break;
                             case "find":
