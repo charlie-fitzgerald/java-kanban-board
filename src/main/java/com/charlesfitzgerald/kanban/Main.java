@@ -107,6 +107,8 @@ public class Main {
                     board.add(newTask);
 
                     System.out.println("New task added successfully!");
+                    System.out.println("Your new task is: ");
+                    System.out.println(newTask);
                     break;
 
                 case "list":
@@ -235,7 +237,7 @@ public class Main {
                         String userConfirmation = askYesNoQuit(scanner, "Confirm move? (y or n | q to quit)");
                         switch (userConfirmation) {
                             case "q":
-                                System.out.println("Move aborted");
+                                System.out.println("Move aborted. Returning to main menu");
                                 exitMove = true;
                                 break;
                             case "y":
@@ -255,7 +257,6 @@ public class Main {
                         if(exitMove) {
                             break;
                         }
-
                     }
 
                     break;
@@ -326,17 +327,49 @@ public class Main {
                 }
 
                 case "del":
-                    String delPrompt = "Enter id of task to delete: ";
-                    System.out.print("> ");
-                    long delId = readLongOrFail(scanner, delPrompt);
+                    boolean exitDel = false;
+                    do {
+                        String delPrompt = "Enter id of task to delete: ";
+                        long delId = readLongOrFail(scanner, delPrompt);
+                        Task delTask = board.find(delId);
+                        Column delTaskCol = board.getCol(delId);
 
-                    boolean result = board.remove(delId);
+                        List<Task> delTaskList = board.get(delTaskCol);
+                        int taskCount = delTaskList.size();
 
-                    if (result) {
-                        System.out.println("Task removed successfully");
-                    } else {
-                        System.out.println("Task not found");
-                    }
+                        if (delTask == null) {
+                            System.out.println("Task not found. Select a valid task");
+                            continue;
+                        }
+
+                        // User confirms that they selected the correct task
+                        System.out.println("You have selected this task to delete: ");
+                        System.out.println(TaskViews.formatTaskLine(delTask, delTaskCol));
+
+                        String delConfirmResponse = askYesNoQuit(scanner, "Are you sure you want to delete this task? (y or n | q to quit)");
+
+                        switch (delConfirmResponse) {
+                            case "q":
+                                exitDel = true;
+                                System.out.println("Delete aborted. Returning to main menu");
+                                break;
+                            case "y":
+                                boolean result = board.remove(delId);
+
+                                if (result) {
+                                    exitDel = true;
+                                    System.out.println("Task removed successfully");
+                                    System.out.println(delTaskCol.name() + " currently has " + taskCount + " tasks.");
+                                } else {
+                                    System.out.println("Task not found");
+                                }
+                                break;
+                            case "n":
+                                System.out.println("Select a different task to delete");
+                        }
+
+                    } while (!exitDel);
+
                     break;
                 case "save":
                     boolean save = board.save();

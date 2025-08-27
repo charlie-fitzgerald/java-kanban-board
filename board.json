@@ -23,14 +23,12 @@
       "title": "new task",
       "description": "it\u0027s a test task, a task to test",
       "priority": 1
-    }
-  ],
-  "doing": [
+    },
     {
-      "id": 1,
-      "title": "New Title",
-      "description": "It\u0027s task 2",
-      "priority": 1
+      "id": 8,
+      "title": "M Title",
+      "description": "It\u0027s a task with an M for a title",
+      "priority": 2
     },
     {
       "id": 4,
@@ -39,12 +37,13 @@
       "priority": 2
     }
   ],
-  "done": [
+  "doing": [
     {
-      "id": 3,
-      "title": "task4",
-      "description": "task4",
-      "priority": 3
+      "id": 1,
+      "title": "New Title",
+      "description": "It\u0027s task 2",
+      "priority": 1
     }
-  ]
+  ],
+  "done": []
 }

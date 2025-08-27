@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Comparator;
 
 public class Board {
     private final ArrayList<Task> todo;
@@ -51,17 +50,6 @@ public class Board {
                 }
             }
 
-        }
-        return null;
-    }
-
-    public String getColName(long id) {
-        for (Column col : Column.values()) {
-            for (Task t : get(col)) {
-                if(t.getId() == id) {
-                    return col.name();
-                }
-            }
         }
         return null;
     }
@@ -116,17 +104,6 @@ public class Board {
         t.setTitle(title);
         t.setDescription(description);
         t.setPriority(priority);
-    }
-
-    public void getTasks(List<Task> arrayList) {
-
-        if (arrayList.isEmpty()) {
-            System.out.println("(No tasks)");
-        } else {
-            for (Task task : arrayList) {
-                System.out.println(task);
-            }
-        }
     }
 
     public SaveData toSaveData() {
