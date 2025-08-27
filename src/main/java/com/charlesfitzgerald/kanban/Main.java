@@ -441,13 +441,24 @@ public class Main {
 
                     boolean inHelpFlow = true;
                     while (inHelpFlow) {
-                        System.out.println("Type a command from the list to get more details on that specific command. Type q to quit to main menu");
+                        System.out.println("Type a command from the list to get more details on that specific command. Type 'q' to quit to main menu (quit will return help for the 'quit' command)");
                         String helpInput = scanner.nextLine().toLowerCase().trim();
 
                         switch (helpInput) {
-                            case "q", "quit":
+                            case "q":
                                 System.out.println("Returning to main menu");
                                 inHelpFlow = false;
+                                break;
+                            case "add":
+                                System.out.println("Usage: add");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Add a new task to the board. You will be prompted to enter a title,");
+                                System.out.println("  description, and priority (1–3). By default, the task is added to TODO.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  add");
+                                System.out.println();
                                 break;
                             case "list":
                                 System.out.println("Usage: list <todo|doing|done> [--by <id|i|title|t|priority|p|prio>] [--desc|--d]");
@@ -478,9 +489,84 @@ public class Main {
                                 System.out.println("  7 --v");
                                 System.out.println();
                                 break;
+                            case "move":
+                                System.out.println("Usage: move");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Move an existing task from one list to another. You will be prompted");
+                                System.out.println("  for the task ID, then asked to confirm the task and select a target list.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  move");
+                                System.out.println();
+                                break;
+                            case "edit":
+                                System.out.println("Usage: edit");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Edit an existing task by its ID. You will be prompted to confirm each");
+                                System.out.println("  field (title, description, priority), and only the ones you change");
+                                System.out.println("  will be updated.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  edit");
+                                System.out.println();
+                                break;
+                            case "del":
+                                System.out.println("Usage: del");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Delete an existing task by its ID. You will be asked to confirm before");
+                                System.out.println("  the task is removed.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  del");
+                                System.out.println();
+                                break;
+                            case "save":
+                                System.out.println("Usage: save");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Save the current board data to disk. By default, data is saved to 'board.json'.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  save");
+                                System.out.println();
+                                break;
+                            case "load":
+                                System.out.println("Usage: load");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Load board data from the save file ('board.json'). This replaces the");
+                                System.out.println("  current board state.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  load");
+                                System.out.println();
+                                break;
+                            case "version":
+                                System.out.println("Usage: version");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Show the current version of the Kanban CLI.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  version");
+                                System.out.println();
+                                break;
+                            case "quit":
+                                System.out.println("Usage: quit");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Save (auto-save) and exit the program.");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  quit");
+                                System.out.println();
+                                break;
                             default:
                                 printHelpCommands();
-                                System.out.println("No detailed help for " + helpInput + " currently. Try 'list', 'find', or 'q' to quit.");
+                                System.out.println("That command not found. Choose a command from the command list, or q to quit to the main menu.");
                                 break;
                         }
 
