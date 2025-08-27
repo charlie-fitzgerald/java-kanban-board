@@ -73,6 +73,20 @@ public class Main {
         }
     }
 
+    static void printHelpCommands() {
+        System.out.println("Commands:");
+        System.out.println("  add     - Add a new task to a list");
+        System.out.println("  list    - List tasks in a specific list.");
+        System.out.println("  find    - Find task by id");
+        System.out.println("  move    - Move a task between lists");
+        System.out.println("  edit    - Edit a task by entering its id");
+        System.out.println("  del     - Delete a task by entering its id");
+        System.out.println("  save    - Save the current data");
+        System.out.println("  load    - Load data from a save file");
+        System.out.println("  version - View the current version of the software");
+        System.out.println("  quit    - Exit the program");
+    }
+
     public static void main(String[] args) {
         Board board = new Board();
         Scanner scanner = new Scanner(System.in);
@@ -390,17 +404,38 @@ public class Main {
 
                     break;
                 case "help":
-                    System.out.println("Commands:");
-                    System.out.println("  add     - Add a new task to a list");
-                    System.out.println("  list    - List tasks in a specific list. Can use --sorted and --by-priority flags");
-                    System.out.println("  find    - Find task by id");
-                    System.out.println("  move    - Move a task between lists");
-                    System.out.println("  edit    - Edit a task by entering its id");
-                    System.out.println("  del     - Delete a task by entering its id");
-                    System.out.println("  save    - Save the current data");
-                    System.out.println("  load    - Load data from a save file");
-                    System.out.println("  version - View the current version of the software");
-                    System.out.println("  quit    - Exit the program");
+                    printHelpCommands();
+
+                    boolean inHelpFlow = true;
+                    while (inHelpFlow) {
+                        System.out.println("Type a command from the list to get more details on that specific command. Type q to quit to main menu");
+                        String helpInput = scanner.nextLine().toLowerCase().trim();
+
+                        switch (helpInput) {
+                            case "q", "quit":
+                                System.out.println("Returning to main menu");
+                                inHelpFlow = false;
+                                break;
+                            case "list":
+                                System.out.println("Usage: list <todo|doing|done> [--by <id|i|title|t|priority|p|prio>] [--desc|--d]");
+                                System.out.println();
+                                System.out.println("Options:");
+                                System.out.println("  --by <key>   Sort by id/title/priority (aliases supported)");
+                                System.out.println("  --desc, --d  Sort in descending order");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  list todo");
+                                System.out.println("  list doing --by title");
+                                System.out.println("  list done --by p --d");
+                                System.out.println();
+                                break;
+                            default:
+                                printHelpCommands();
+                                System.out.println("No detailed help for " + helpInput + " currently. Try 'list' or 'q' to quit.");
+                                break;
+                        }
+
+                    }
                     break;
                 case "version":
                     System.out.println("Kanban CLI - Version " + VERSION);
