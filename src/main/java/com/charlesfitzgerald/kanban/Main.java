@@ -140,7 +140,7 @@ public class Main {
                         board.add(newTask, addToCol);
                     }
 
-                    System.out.println("New task added to "+ addToCol.name() + " successfully!");
+                    System.out.println("New task with ID " + newTask.getId() + " added to "+ addToCol.name() + " successfully!");
                     System.out.println("Your new task is: ");
                     System.out.println(TaskViews.formatTaskLine(newTask, addToCol));
                     boolean addSave = board.save();
@@ -580,12 +580,20 @@ public class Main {
                             case "add":
                                 System.out.println("Usage: add");
                                 System.out.println();
-                                System.out.println("Description:");
-                                System.out.println("  Add a new task to the board. You will be prompted to enter a title,");
-                                System.out.println("  description, and priority (1–3). By default, the task is added to TODO.");
+                                System.out.println("Prompts you to enter:");
+                                System.out.println("  Title       - Short description of the task");
+                                System.out.println("  Description - Longer details of the task");
+                                System.out.println("  Priority    - Number between 1 (low) and 3 (high)");
+                                System.out.println("  List        - Target column (todo | doing | done).");
+                                System.out.println("                If input is invalid, defaults to TODO.");
                                 System.out.println();
-                                System.out.println("Examples:");
-                                System.out.println("  add");
+                                System.out.println("Example flow:");
+                                System.out.println("  > add");
+                                System.out.println("  Enter title: Write report");
+                                System.out.println("  Enter description: Draft the quarterly report");
+                                System.out.println("  Enter priority (1-3): 2");
+                                System.out.println("  Add task to which list: doing");
+                                System.out.println("  -> Task created in DOING with ID #7");
                                 System.out.println();
                                 break;
                             case "list":
