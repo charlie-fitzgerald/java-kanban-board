@@ -84,16 +84,17 @@ public class Main {
 
     static void printHelpCommands() {
         System.out.println("Commands:");
-        System.out.println("  add     - Add a new task to a list");
-        System.out.println("  list    - List tasks in a specific list.");
-        System.out.println("  find    - Find task by id");
-        System.out.println("  move    - Move a task between lists");
-        System.out.println("  edit    - Edit a task by entering its id");
-        System.out.println("  del     - Delete a task by entering its id");
-        System.out.println("  save    - Save the current data");
-        System.out.println("  load    - Load data from a save file");
-        System.out.println("  version - View the current version of the software");
-        System.out.println("  quit    - Exit the program");
+        System.out.println("  add          - Add a new task to a list");
+        System.out.println("  list         - List tasks in a specific list.");
+        System.out.println("  find         - Find task by id");
+        System.out.println("  move         - Move a task between lists");
+        System.out.println("  edit         - Edit a task by entering its id");
+        System.out.println("  del          - Delete a task by entering its id");
+        System.out.println("  rename-board - Rename the current board");
+        System.out.println("  save         - Save the current data");
+        System.out.println("  load         - Load data from a save file");
+        System.out.println("  version      - View the current version of the software");
+        System.out.println("  quit         - Exit the program");
     }
 
     public static void main(String[] args) {
@@ -107,7 +108,7 @@ public class Main {
         }
 
         while(true) {
-            System.out.println("Available commands: add | list | find | move | edit | del | save | load | version | help | quit");
+            System.out.println("Available commands: add | list | find | move | edit | del | rename-board | save | load | version | help | quit");
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -433,7 +434,6 @@ public class Main {
                     }
                     break;
                 }
-
                 case "del":
                     boolean exitDel = false;
                     do {
@@ -479,6 +479,43 @@ public class Main {
 
                     } while (!exitDel);
 
+                    break;
+                case "rename-board":
+                    boolean inRenameBoardFlow = true;
+                    while(inRenameBoardFlow) {
+                        System.out.println("Current board name: " + board.getBoardName());
+                        System.out.println("Please enter a new board name ('q' to quit to main menu. 'q' is an invalid board name): ");
+                        System.out.print("> ");
+                        String newBoardNameInput = scanner.nextLine().trim();
+
+                        if (newBoardNameInput.equalsIgnoreCase("q")) {
+                            System.out.println("Returning to main menu");
+                            inRenameBoardFlow = false;
+                        }
+
+                        if (newBoardNameInput.isEmpty()) {
+                            System.out.println("No new name detected. Please enter a new name.");
+                            continue;
+                        }
+
+                        if (newBoardNameInput.length() >= 20 ) {
+                            System.out.println("New name is too long. Enter a new name that is less than 20 characters");
+                            continue;
+                        }
+
+                        if (newBoardNameInput.equals(board.getBoardName())) {
+                            System.out.println("Name unchanged");
+                            inRenameBoardFlow = false;
+                        }
+
+                        if (inRenameBoardFlow) {
+                            board.setBoardName(newBoardNameInput);
+                            System.out.println("Board renamed to: " + board.getBoardName());
+                            board.save();
+                            System.out.printf("Board '" + board.getBoardName() + "' successfully saved to %s%n", board.getSaveFilePath());
+                            inRenameBoardFlow = false;
+                        }
+                    }
                     break;
                 case "save":
                     boolean save = board.save();
@@ -593,6 +630,26 @@ public class Main {
                                 System.out.println();
                                 System.out.println("Examples:");
                                 System.out.println("  del");
+                                System.out.println();
+                                break;
+                            case "rename-board":
+                                System.out.println("Usage: rename-board");
+                                System.out.println();
+                                System.out.println("Description:");
+                                System.out.println("  Interactively rename the current board. The new name will be saved");
+                                System.out.println("  and used on the next load.");
+                                System.out.println();
+                                System.out.println("Rules:");
+                                System.out.println("  - Type 'q' to cancel and return to the main menu");
+                                System.out.println("  - Name cannot be empty");
+                                System.out.println("  - Name must be less than 20 characters");
+                                System.out.println("  - Re-entering the current name will be treated as 'unchanged'");
+                                System.out.println();
+                                System.out.println("Examples:");
+                                System.out.println("  rename-board");
+                                System.out.println("    Current board name: Default Board");
+                                System.out.println("    > Computer Blue");
+                                System.out.println("    Board renamed to: Computer Blue");
                                 System.out.println();
                                 break;
                             case "save":

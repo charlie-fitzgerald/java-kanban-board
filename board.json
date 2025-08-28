@@ -25,6 +25,12 @@
       "title": "Task 1",
       "description": "It\u0027s the first task",
       "priority": 1
+    },
+    {
+      "id": 6,
+      "title": "Program some more",
+      "description": "It\u0027s something to do",
+      "priority": 1
     }
   ],
   "done": [
@@ -41,5 +47,5 @@
       "priority": 2
     }
   ],
-  "boardName": "Default Board"
+  "boardName": "Computer Blue"
 }
