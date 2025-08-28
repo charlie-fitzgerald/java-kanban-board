@@ -388,7 +388,6 @@ public class Main {
                             break;
                         }
                     }
-
                     break;
                 case "edit": {
                     long editId = readLongOrFail(scanner, "Enter id of task to edit: ");
