@@ -5,10 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static String VERSION = "0.2.0";
+    public static String VERSION = "0.8.0";
 
     @org.jetbrains.annotations.Nullable
     public static Column parseColumn(String input) {
@@ -128,13 +126,30 @@ public class Main {
 
                     Task newTask = new Task(board.nextId(), title, description, priority);
 
-                    board.add(newTask);
+                    System.out.println("Add task to which list: TODO | DOING | DONE");
+                    System.out.print("> ");
+                    String newTaskListSelection = scanner.nextLine().trim().toLowerCase();
 
-                    System.out.println("New task added successfully!");
+                    Column addToCol = parseColumn(newTaskListSelection);
+
+                    if (addToCol == null) {
+                        System.out.println("List not found. Defaulting to TODO");
+                        addToCol = Column.TODO;
+                        board.add(newTask, addToCol);
+                    } else {
+                        board.add(newTask, addToCol);
+                    }
+
+                    System.out.println("New task added to "+ addToCol.name() + " successfully!");
                     System.out.println("Your new task is: ");
-                    System.out.println(TaskViews.formatTaskLine(newTask, board.getCol(newTask.getId())));
+                    System.out.println(TaskViews.formatTaskLine(newTask, addToCol));
+                    boolean addSave = board.save();
+                    if (addSave) {
+                        System.out.printf("Board saved successfully to %s%n", board.getSaveFilePath());
+                    } else {
+                        System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
+                    }
                     break;
-
                 case "list":
                     System.out.println("Select list: todo, doing, done, or type 'all' to print all lists");
                     System.out.println("Usage: list [<col> | <all>] [--by id|title|priority] [--desc]");
@@ -326,7 +341,7 @@ public class Main {
                             continue;
                         }
 
-                        System.out.println("Enter which list you want to move the task to: todo, doing, done");
+                        System.out.println("Enter which list you want to move the task to: TODO, DOING, DONE");
                         String moveInput = scanner.nextLine();
 
                         Column toList = parseColumn(moveInput);
@@ -354,6 +369,12 @@ public class Main {
 
                                 if (taskMoved) {
                                     System.out.println("Task moved successfully");
+                                    boolean moveSave = board.save();
+                                    if (moveSave) {
+                                        System.out.printf("Board saved successfully to %s%n", board.getSaveFilePath());
+                                    } else {
+                                        System.out.printf("Failed to save board to %s%n", board.getSaveFilePath());
+                                    }
                                 } else {
                                     System.out.println("Task move failed");
                                 }

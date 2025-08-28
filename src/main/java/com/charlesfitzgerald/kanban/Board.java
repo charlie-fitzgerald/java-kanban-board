@@ -37,9 +37,9 @@ public class Board {
         };
     }
 
-    // enum version to add tasks to todo by default
-    public void add(Task task) {
-        get(Column.TODO).add(task);
+    // enum version to add tasks to list
+    public void add(Task task, Column addToCol) {
+        get(addToCol).add(task);
     }
 
     // function to find task in enum Columns by id
