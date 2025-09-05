@@ -22,6 +22,7 @@ public class Main {
             String input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
+                // no input returns user to main menu
                 case "" -> {
                 }
                 case "add" -> CommandHelpers.handleAdd(board, scanner);

@@ -12,7 +12,9 @@ public class Board {
     private final ArrayList<Task> done;
     private long nextId;
     private String boardName;
-    private static final String SAVE_FILE = "board.json";
+    private static final String DEFAULT_SAVE_DIR = "boards";
+
+    private String saveDir = DEFAULT_SAVE_DIR;
 
     // Default constructor (starts empty)
     public Board() {
@@ -25,7 +27,16 @@ public class Board {
         this.doing = new ArrayList<>(doing);
         this.done = new ArrayList<>(done);
         this.nextId = 0;
-        this.boardName = "Default Board";
+        this.boardName = "board";
+    }
+
+    // Constructor that accepts starting tasks and name
+    public Board(String boardName, List<Task> todo, List<Task> doing, List<Task> done) {
+        this.todo = new ArrayList<>(todo);
+        this.doing = new ArrayList<>(doing);
+        this.done = new ArrayList<>(done);
+        this.nextId = 0;
+        this.boardName = boardName;
     }
 
     // enum version of listing
@@ -71,15 +82,14 @@ public class Board {
     public boolean remove(long id) {
         for (Column col : Column.values()) {
             List<Task> list = get(col);
-
-            for (Task t : list) {
+            for (var it = list.iterator(); it.hasNext(); ) {
+                Task t = it.next();
                 if (t.getId() == id) {
-                    list.remove(t);
+                    it.remove();
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -87,7 +97,6 @@ public class Board {
     public boolean move(long id, Column to) {
         List<Task> toList = get(to);
         if (toList == null) {
-            System.out.println("You shouldn't have made it to this branch");
             return false;
         }
 
@@ -118,26 +127,40 @@ public class Board {
     }
 
     public void loadFrom(SaveData data) {
-        todo.clear();
-        doing.clear();
-        done.clear();
-
+        todo.clear(); doing.clear(); done.clear();
         todo.addAll(data.getTodo());
         doing.addAll(data.getDoing());
         done.addAll(data.getDone());
+
+        String loadedName = data.getBoardName();
+        if (loadedName != null && !loadedName.isBlank()) {
+            this.boardName = loadedName;
+        }
     }
 
     public boolean save() {
         SaveData data = toSaveData();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        try(FileWriter writer = new FileWriter(SAVE_FILE)) {
-            gson.toJson(data, writer);
+        String path = getSaveFilePath();
+        java.nio.file.Path p = java.nio.file.Paths.get(path);
+
+        try {
+            // Ensure parent directory exists (no-op if already exists)
+            java.nio.file.Path parent = p.getParent();
+            if (parent != null) {
+                java.nio.file.Files.createDirectories(parent);
+            }
+
+            try (Writer writer = java.nio.file.Files.newBufferedWriter(p, java.nio.charset.StandardCharsets.UTF_8)) {
+                gson.toJson(data, writer);
+            }
             return true;
         } catch (IOException e) {
             return false;
         }
     }
+
 
     public long getMaxId() {
         long maxId = 0;
@@ -156,8 +179,9 @@ public class Board {
     }
 
     public boolean load() {
-        Gson gson = new Gson();
-        try (FileReader reader = new FileReader(SAVE_FILE)) {
+        var gson = new Gson();
+        var path = java.nio.file.Paths.get(getSaveFilePath());
+        try (var reader = java.nio.file.Files.newBufferedReader(path, java.nio.charset.StandardCharsets.UTF_8)) {
             SaveData data = gson.fromJson(reader, SaveData.class);
             loadFrom(data);
             nextId = getMaxId() + 1;
@@ -197,17 +221,43 @@ public class Board {
         return nextId;
     }
 
+    // return the current save directory
+    public String getSaveDir() {
+        return saveDir;
+    }
+
+    // set a new save directory for this board
+    public void setSaveDir(String saveDir) {
+        this.saveDir = saveDir;
+    }
+
+
+    // return a filename to save from the board's name
+    public String getSaveFilename() {
+        if (getBoardName().isEmpty()) {
+            return "board.json";
+        }
+
+        return this.boardName+".json";
+    }
+
+    // return a filepath to save a board to using the board's current directory and filename
     public String getSaveFilePath() {
-        return SAVE_FILE;
+        return java.nio.file.Paths.get(getSaveDir(), getSaveFilename()).toString();
     }
 
     public String getBoardName() {
         return boardName;
     }
 
+    // set the current board name with sanitized input
     public void setBoardName(String boardName) {
-        this.boardName = boardName;
+        String s = (boardName == null) ? "" : boardName.trim();
+        if (s.isEmpty()) return; // ignore empty
+        if (s.contains("/") || s.contains("\\") || s.contains("..")) return; // ignore invalid
+        this.boardName = s;
     }
+
 
 
 }
