@@ -17,15 +17,15 @@ public class CommandHelpers {
         System.out.println("  move         - Move a task between lists");
         System.out.println("  edit         - Edit a task by entering its id");
         System.out.println("  del          - Delete a task by entering its id");
-        System.out.println("  rename-board - Rename the current board");
         System.out.println("  save         - Save the current data");
+        System.out.println("  save-as      - Rename the current board and save new file.");
         System.out.println("  load         - Load data from a save file");
         System.out.println("  version      - View the current version of the software");
         System.out.println("  quit         - Exit the program");
     }
 
     public static void printMenu() {
-        System.out.println("Available commands: add | list | find | move | edit | del | rename-board | save | load | version | help | quit");
+        System.out.println("Available commands: add | list | find | move | edit | del | save | save-as | load | version | help | quit");
         System.out.print("> ");
     }
 
@@ -60,9 +60,8 @@ public class CommandHelpers {
         try {
             return Long.parseLong(inputString);
         } catch (NumberFormatException e) {
-            System.out.println("Enter a valid number");
+            return -1;
         }
-        return -1;
     }
 
     // Reads a priority in [1..3]; keeps prompting until valid.
@@ -252,6 +251,8 @@ public class CommandHelpers {
                 if ("--d".equalsIgnoreCase(token) || "--desc".equalsIgnoreCase(token) || "--descending".equalsIgnoreCase(token)) {
                     isDescending = true;
                     break;
+                } else {
+                    System.out.println("Ignoring unknown flag " + token);
                 }
             }
 
@@ -314,6 +315,11 @@ public class CommandHelpers {
             Task moveTask = board.find(moveTaskId);
             Column fromList = board.getCol(moveTaskId);
 
+            if (fromList == null) {
+                System.out.println("List not found");
+                continue;
+            }
+
             if (moveTask == null) {
                 System.out.println("Task not found");
                 continue;
@@ -346,11 +352,11 @@ public class CommandHelpers {
             }
 
             if (fromList == toList) {
-                System.out.print("The task is already in that list. Please select a different list.");
+                System.out.println("The task is already in that list. Please select a different list.");
                 continue;
             }
 
-            System.out.println("Moving task from " + board.getCol(moveTaskId) + ", to " + toList.name());
+            System.out.println("Moving task from " + fromList.name() + ", to " + toList.name());
 
             String userConfirmation = askYesNoQuit(scanner, "Confirm move? (y or n | q to quit)");
             switch (userConfirmation) {
@@ -466,6 +472,11 @@ public class CommandHelpers {
             Task delTask = board.find(delId);
             Column delTaskCol = board.getCol(delId);
 
+            if (delTaskCol == null) {
+                System.out.println("Task not found. Select a valid task");
+                continue;
+            }
+
             List<Task> delTaskList = board.get(delTaskCol);
 
             if (delTask == null) {
@@ -504,17 +515,18 @@ public class CommandHelpers {
         } while (!exitDel);
     }
 
-    public static void handleRenameBoard(@NotNull Board board, @NotNull Scanner scanner) {
-        boolean inRenameBoardFlow = true;
-        while (inRenameBoardFlow) {
+    public static void handleSaveAs(@NotNull Board board, @NotNull Scanner scanner) {
+        boolean inSaveAsFlow = true;
+        while (inSaveAsFlow) {
             System.out.println("Current board name: " + board.getBoardName());
-            System.out.println("Please enter a new board name ('q' to quit to main menu. 'q' is an invalid board name): ");
+            System.out.println("Please enter a new board name (Letters, numbers, spaces; no '/' '\\' or '..' allowed) ");
+            System.out.println("Type 'q' to cancel ('q' is an invalid board name)");
             System.out.print("> ");
             String newBoardNameInput = scanner.nextLine().trim();
 
             if (newBoardNameInput.equalsIgnoreCase("q")) {
-                System.out.println("Returning to main menu");
-                inRenameBoardFlow = false;
+                System.out.println("Save-as cancelled. Returning to main menu");
+                return;
             }
 
             if (newBoardNameInput.isEmpty()) {
@@ -528,17 +540,26 @@ public class CommandHelpers {
             }
 
             if (newBoardNameInput.equals(board.getBoardName())) {
-                System.out.println("Name unchanged");
-                inRenameBoardFlow = false;
+                System.out.println("Identical name detected. No new file created");
+                return;
             }
 
-            if (inRenameBoardFlow) {
-                board.setBoardName(newBoardNameInput);
+
+            boolean isBoardNameSet = board.setBoardName(newBoardNameInput);
+            if (isBoardNameSet) {
+
                 System.out.println("Board renamed to: " + board.getBoardName());
-                board.save();
-                System.out.printf("Board '" + board.getBoardName() + "' successfully saved to %s%n", board.getSaveFilePath());
-                inRenameBoardFlow = false;
+                boolean newBoardNameSaved = board.save();
+                if (newBoardNameSaved) {
+                    System.out.printf("Board '" + board.getBoardName() + "' successfully saved to %s%n", board.getSaveFilePath());
+                } else {
+                    System.out.println("Save failed. Check write permissions and try again.");
+                }
+            } else {
+                System.out.println("Invalid name. Please try again. No empty name, '/' '\\' '..' allowed.");
             }
+            inSaveAsFlow = false;
+
         }
     }
 
@@ -667,24 +688,40 @@ public class CommandHelpers {
                     System.out.println("  del");
                     System.out.println();
                     break;
-                case "rename-board":
-                    System.out.println("Usage: rename-board");
+                case "save-as":
+                    System.out.println("Usage: save-as");
                     System.out.println();
                     System.out.println("Description:");
-                    System.out.println("  Interactively rename the current board. The new name will be saved");
-                    System.out.println("  and used on the next load.");
+                    System.out.println("  Save the current board under a NEW name. This writes to 'boards/<name>.json'.");
+                    System.out.println("  The previous file (if any) is NOT deleted or renamed. Useful for creating");
+                    System.out.println("  copies/snapshots of your board.");
                     System.out.println();
                     System.out.println("Rules:");
-                    System.out.println("  - Type 'q' to cancel and return to the main menu");
-                    System.out.println("  - Name cannot be empty");
-                    System.out.println("  - Name must be less than 20 characters");
-                    System.out.println("  - Re-entering the current name will be treated as 'unchanged'");
+                    System.out.println("  - Type 'q' to cancel and return to the main menu.");
+                    System.out.println("  - Name cannot be empty.");
+                    System.out.println("  - Name must be less than 20 characters.");
+                    System.out.println("  - Name must NOT contain '/', '\\\\', or '..'.");
+                    System.out.println("  - Re-entering the current name is treated as 'unchanged'.");
+                    System.out.println("  - The 'boards/' folder will be created automatically if missing.");
                     System.out.println();
-                    System.out.println("Examples:");
-                    System.out.println("  rename-board");
-                    System.out.println("    Current board name: Default Board");
-                    System.out.println("    > Computer Blue");
-                    System.out.println("    Board renamed to: Computer Blue");
+                    System.out.println("Notes:");
+                    System.out.println("  - If a file with the same name already exists, it will be overwritten.");
+                    System.out.println("  - Invalid names are rejected and you will be prompted again.");
+                    System.out.println();
+                    System.out.println("Example flow:");
+                    System.out.println("  > save-as");
+                    System.out.println("  Current board name: board");
+                    System.out.println("  Please enter a new board name (Letters, numbers, spaces; no '/' '\\\\' or '..' allowed)");
+                    System.out.println("  Type 'q' to cancel ('q' is an invalid board name)");
+                    System.out.println("  > work");
+                    System.out.println("  Board renamed to: work");
+                    System.out.println("  Board 'work' successfully saved to boards/work.json");
+                    System.out.println();
+                    System.out.println("  (Cancel example)");
+                    System.out.println("  > save-as");
+                    System.out.println("  Current board name: work");
+                    System.out.println("  > q");
+                    System.out.println("  Save-as cancelled. Returning to main menu");
                     System.out.println();
                     break;
                 case "save":

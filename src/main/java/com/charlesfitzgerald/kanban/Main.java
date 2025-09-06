@@ -31,7 +31,7 @@ public class Main {
                 case "move" -> CommandHelpers.handleMove(board, scanner);
                 case "edit" -> CommandHelpers.handleEdit(board, scanner);
                 case "del" -> CommandHelpers.handleDel(board, scanner);
-                case "rename-board" -> CommandHelpers.handleRenameBoard(board, scanner);
+                case "save-as" -> CommandHelpers.handleSaveAs(board, scanner);
                 case "save" -> CommandHelpers.handleSave(board);
                 case "load" -> CommandHelpers.handleLoad(board);
                 case "help" -> CommandHelpers.handleHelp(scanner);

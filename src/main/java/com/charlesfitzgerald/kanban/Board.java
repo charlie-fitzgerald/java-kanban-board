@@ -3,6 +3,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +57,6 @@ public class Board {
     }
 
     // function to find task in enum Columns by id
-    // will search TODO -> DOING -> DONE
     public Task find(long id) {
         for (Column col : Column.values()) {
             for (Task t : get(col)) {
@@ -143,16 +145,16 @@ public class Board {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         String path = getSaveFilePath();
-        java.nio.file.Path p = java.nio.file.Paths.get(path);
+        Path p = java.nio.file.Paths.get(path);
 
         try {
             // Ensure parent directory exists (no-op if already exists)
-            java.nio.file.Path parent = p.getParent();
+            Path parent = p.getParent();
             if (parent != null) {
-                java.nio.file.Files.createDirectories(parent);
+                Files.createDirectories(parent);
             }
 
-            try (Writer writer = java.nio.file.Files.newBufferedWriter(p, java.nio.charset.StandardCharsets.UTF_8)) {
+            try (Writer writer = Files.newBufferedWriter(p, java.nio.charset.StandardCharsets.UTF_8)) {
                 gson.toJson(data, writer);
             }
             return true;
@@ -179,9 +181,9 @@ public class Board {
     }
 
     public boolean load() {
-        var gson = new Gson();
-        var path = java.nio.file.Paths.get(getSaveFilePath());
-        try (var reader = java.nio.file.Files.newBufferedReader(path, java.nio.charset.StandardCharsets.UTF_8)) {
+        Gson gson = new Gson();
+        Path path = Paths.get(getSaveFilePath());
+        try (Reader reader = Files.newBufferedReader(path, java.nio.charset.StandardCharsets.UTF_8)) {
             SaveData data = gson.fromJson(reader, SaveData.class);
             loadFrom(data);
             nextId = getMaxId() + 1;
@@ -238,12 +240,12 @@ public class Board {
             return "board.json";
         }
 
-        return this.boardName+".json";
+        return this.boardName + ".json";
     }
 
     // return a filepath to save a board to using the board's current directory and filename
     public String getSaveFilePath() {
-        return java.nio.file.Paths.get(getSaveDir(), getSaveFilename()).toString();
+        return Paths.get(getSaveDir(), getSaveFilename()).toString();
     }
 
     public String getBoardName() {
@@ -251,11 +253,12 @@ public class Board {
     }
 
     // set the current board name with sanitized input
-    public void setBoardName(String boardName) {
+    public boolean setBoardName(String boardName) {
         String s = (boardName == null) ? "" : boardName.trim();
-        if (s.isEmpty()) return; // ignore empty
-        if (s.contains("/") || s.contains("\\") || s.contains("..")) return; // ignore invalid
+        if (s.isEmpty()) return false; // ignore empty
+        if (s.contains("/") || s.contains("\\") || s.contains("..")) return false; // ignore invalid
         this.boardName = s;
+        return true;
     }
 
 
